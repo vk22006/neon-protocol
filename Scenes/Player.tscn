@@ -16,3 +16,6 @@ texture = ExtResource("1_rpqav")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1981891433]
 shape = SubResource("CapsuleShape2D_qbkls")
+
+[node name="Camera2D" type="Camera2D" parent="." unique_id=1122963074]
+zoom = Vector2(1.5, 1.5)
