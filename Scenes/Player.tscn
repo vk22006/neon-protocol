@@ -1,0 +1,18 @@
+[gd_scene format=3 uid="uid://ouwabkhk6srp"]
+
+[ext_resource type="Script" uid="uid://lic07buf03af" path="res://Scripts/PlayerController.cs" id="1_kyqiw"]
+[ext_resource type="Texture2D" uid="uid://deipdwmxp6jm8" path="res://Assets/characters/merchant.png" id="1_rpqav"]
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_qbkls"]
+radius = 5.0
+height = 16.0
+
+[node name="Player" type="CharacterBody2D" unique_id=168021641]
+collision_layer = 2
+script = ExtResource("1_kyqiw")
+
+[node name="Sprite2D" type="Sprite2D" parent="." unique_id=967457001]
+texture = ExtResource("1_rpqav")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1981891433]
+shape = SubResource("CapsuleShape2D_qbkls")

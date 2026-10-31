@@ -20,6 +20,7 @@
 [ext_resource type="Texture2D" uid="uid://bj2u10tp4rv24" path="res://Assets/interior/walls/wall-window-planet.png" id="18_hdf80"]
 [ext_resource type="Texture2D" uid="uid://bcfnmygxtcsib" path="res://Assets/interior/walls/wall-window.png" id="19_jwpg7"]
 [ext_resource type="Texture2D" uid="uid://d1do51eyp3rft" path="res://Assets/interior/walls/wall.png" id="20_k2e45"]
+[ext_resource type="PackedScene" uid="uid://ouwabkhk6srp" path="res://Scenes/Player.tscn" id="21_pdsj5"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_bo1nx"]
 texture = ExtResource("1_jjgbg")
@@ -174,6 +175,7 @@ texture = ExtResource("20_k2e45")
 0:1/0 = 0
 
 [sub_resource type="TileSet" id="TileSet_hk3oa"]
+physics_layer_0/collision_layer = 1
 sources/0 = SubResource("TileSetAtlasSource_6ml46")
 sources/1 = SubResource("TileSetAtlasSource_qax2n")
 sources/2 = SubResource("TileSetAtlasSource_y86h7")
@@ -196,6 +198,9 @@ tile_map_data = PackedByteArray("AAAJAAoABwAAAAAAAAAJAAsABwAAAAAAAAAKAAoABwAAAAA
 tile_set = SubResource("TileSet_hk3oa")
 
 [node name="Actors" type="Node2D" parent="." unique_id=576906086]
+
+[node name="Player" parent="Actors" unique_id=168021641 instance=ExtResource("21_pdsj5")]
+position = Vector2(277, 308)
 
 [node name="Gameplay" type="Node2D" parent="." unique_id=971751614]
 
