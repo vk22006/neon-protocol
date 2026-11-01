@@ -11,7 +11,9 @@ height = 16.0
 collision_layer = 2
 script = ExtResource("1_kyqiw")
 
-[node name="Sprite2D" type="Sprite2D" parent="." unique_id=967457001]
+[node name="Visuals" type="Node2D" parent="." unique_id=252795384]
+
+[node name="Sprite2D" type="Sprite2D" parent="Visuals" unique_id=967457001]
 texture = ExtResource("1_rpqav")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1981891433]
