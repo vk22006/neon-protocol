@@ -1,0 +1,18 @@
+[gd_scene format=3 uid="uid://d3wjnbgwnljrk"]
+
+[ext_resource type="Script" uid="uid://cpp76xvvbb0ef" path="res://Scripts/Projectile.cs" id="1_k1cl8"]
+[ext_resource type="Texture2D" uid="uid://c1pvc8ldv3aif" path="res://Assets/projectiles/bullet.png" id="1_lal66"]
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_k1cl8"]
+radius = 5.0
+
+[node name="Projectile" type="Area2D" unique_id=180886772]
+scale = Vector2(0.15, 0.15)
+script = ExtResource("1_k1cl8")
+
+[node name="Sprite2D" type="Sprite2D" parent="." unique_id=1915254281]
+scale = Vector2(0.04, 0.04)
+texture = ExtResource("1_lal66")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1987117511]
+shape = SubResource("CapsuleShape2D_k1cl8")
