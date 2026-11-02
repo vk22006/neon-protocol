@@ -233,6 +233,7 @@ radius = 6.0
 height = 26.0
 
 [node name="Player" type="CharacterBody2D" unique_id=168021641]
+z_index = 2
 collision_layer = 2
 script = ExtResource("1_kyqiw")
 
