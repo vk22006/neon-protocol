@@ -45,6 +45,10 @@ public partial class PlayerController : CharacterBody2D {
 	private FacingDirection _facingDirection = FacingDirection.Down;
 
 	public override void _Ready() {
+		if (!IsInGroup("player")) {
+			AddToGroup("player");
+		}
+
 		_sprite = GetNode<AnimatedSprite2D>("Visuals/AnimatedSprite2D");
 		_weaponPivot = GetNode<Node2D>("WeaponPivot");
 		_muzzleFlash = GetNode<AnimatedSprite2D>("WeaponPivot/MuzzleFlash");
