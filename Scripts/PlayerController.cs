@@ -1,7 +1,6 @@
 using Godot;
 
-public partial class PlayerController : CharacterBody2D
-{
+public partial class PlayerController : CharacterBody2D {
 	[Export]
 	public float MoveSpeed { get; set; } = 120.0f;
 
@@ -18,12 +17,15 @@ public partial class PlayerController : CharacterBody2D
 	[Export]
 	public Vector2 WeaponOffsetRight { get; set; } = new Vector2(6, 7);
 
+	[ExportGroup("Weapon Layering")]
+	[Export(PropertyHint.Range, "0,45,1")]
+	public float UpwardAimThresholdDegrees { get; set; } = 25.0f;
+
 	private AnimatedSprite2D _sprite;
 	private Vector2 _lastDirection = Vector2.Down;
 	private Node2D _weaponPivot;
 
-	private enum FacingDirection
-	{
+	private enum FacingDirection {
 		Up,
 		Down,
 		Left,
@@ -32,8 +34,7 @@ public partial class PlayerController : CharacterBody2D
 
 	private FacingDirection _facingDirection = FacingDirection.Down;
 
-	public override void _Ready()
-	{
+	public override void _Ready() {
 		_sprite = GetNode<AnimatedSprite2D>("Visuals/AnimatedSprite2D");
 		_weaponPivot = GetNode<Node2D>("WeaponPivot");
 
@@ -41,8 +42,7 @@ public partial class PlayerController : CharacterBody2D
 		UpdateWeaponPosition();
 	}
 
-	public override void _PhysicsProcess(double delta)
-	{
+	public override void _PhysicsProcess(double delta) {
 		Vector2 direction = Input.GetVector(
 			"move_left",
 			"move_right",
@@ -52,8 +52,7 @@ public partial class PlayerController : CharacterBody2D
 
 		Velocity = direction * MoveSpeed;
 
-		if (direction != Vector2.Zero)
-		{
+		if (direction != Vector2.Zero) {
 			UpdateFacingDirection(direction);
 			UpdateWeaponPosition();
 		}
@@ -64,26 +63,20 @@ public partial class PlayerController : CharacterBody2D
 		UpdateAim();
 	}
 
-	private void UpdateFacingDirection(Vector2 direction)
-	{
-		if (Mathf.Abs(direction.X) > Mathf.Abs(direction.Y))
-		{
+	private void UpdateFacingDirection(Vector2 direction) {
+		if (Mathf.Abs(direction.X) > Mathf.Abs(direction.Y)) {
 			_facingDirection = direction.X > 0
 				? FacingDirection.Right
 				: FacingDirection.Left;
-		}
-		else
-		{
+		} else {
 			_facingDirection = direction.Y > 0
 				? FacingDirection.Down
 				: FacingDirection.Up;
 		}
 	}
 
-	private void UpdateWeaponPosition()
-	{
-		switch (_facingDirection)
-		{
+	private void UpdateWeaponPosition() {
+		switch (_facingDirection) {
 			case FacingDirection.Up:
 				_weaponPivot.Position = WeaponOffsetUp;
 				break;
@@ -102,28 +95,24 @@ public partial class PlayerController : CharacterBody2D
 		}
 	}
 
-	private void UpdateAnimation(Vector2 direction)
-	{
-		if (direction != Vector2.Zero)
-		{
+	private void UpdateAnimation(Vector2 direction) {
+		if (direction != Vector2.Zero) {
 			_lastDirection = direction;
 
 			string animation = GetDirectionName(_lastDirection);
 			_sprite.Play("walk_" + animation);
-		}
-		else
-		{
+		} else {
 			PlayIdleAnimation();
 		}
 	}
 
-	private void UpdateAim()
-	{
+	private void UpdateAim() {
 		Vector2 mousePosition = GetGlobalMousePosition();
 		Vector2 aimVector = mousePosition - _weaponPivot.GlobalPosition;
 
-		if (aimVector.LengthSquared() < 0.001f)
+		if (aimVector.LengthSquared() < 0.001f) {
 			return;
+		}
 
 		float angle = aimVector.Angle();
 		_weaponPivot.Rotation = angle;
@@ -138,52 +127,34 @@ public partial class PlayerController : CharacterBody2D
 			aimingLeft ? -1.0f : 1.0f
 		);
 
-		UpdateWeaponLayer(angle, aimingLeft);
+		UpdateWeaponLayer(angle);
 	}
 
-	private void UpdateWeaponLayer(float aimAngle, bool aimingLeft)
-	{
-		bool aimingUp = Mathf.Sin(aimAngle) < 0.0f;
-		bool renderBehind = false;
+	private void UpdateWeaponLayer(float aimAngle) {
+		float aimAngleDeg = Mathf.RadToDeg(aimAngle);
 
-		switch (_facingDirection)
-		{
-			case FacingDirection.Up:
-				// Facing away from camera: character's back faces viewer, weapon renders behind.
-				renderBehind = true;
-				break;
+		// Upward aim angles fall in the negative degrees range [-180, 0].
+		// We define a horizontal margin so horizontal aiming (East ~0°, West ~±180°)
+		// remains solidly in front of the player and never prematurely switches behind.
+		bool aimingUpward = aimAngleDeg < -UpwardAimThresholdDegrees &&
+			aimAngleDeg > -(180.0f - UpwardAimThresholdDegrees);
 
-			case FacingDirection.Down:
-				// Facing towards camera: weapon is in front, unless aiming upward behind the head.
-				renderBehind = aimingUp;
-				break;
-
-			case FacingDirection.Left:
-				// Facing left: weapon is in front when aiming forward/downward (left/down),
-				// and behind when aiming upward or backwards across the body (aiming right).
-				renderBehind = aimingUp || !aimingLeft;
-				break;
-
-			case FacingDirection.Right:
-				// Facing right: weapon is in front when aiming forward/downward (right/down),
-				// and behind when aiming upward or backwards across the body (aiming left).
-				renderBehind = aimingUp || aimingLeft;
-				break;
-		}
+		// Render behind the character when aiming upward (NE, NW, North).
+		// In NE and NW, the barrel extends past the body and remains partially visible.
+		// Directly North, the weapon is positioned along the spine and naturally occluded by the character.
+		// Downward and horizontal aiming render in front of the player.
+		bool renderBehind = aimingUpward;
 
 		_weaponPivot.ZIndex = renderBehind ? -1 : 1;
 	}
 
-	private void PlayIdleAnimation()
-	{
+	private void PlayIdleAnimation() {
 		string animation = GetDirectionName(_lastDirection);
 		_sprite.Play("idle_" + animation);
 	}
 
-	private string GetDirectionName(Vector2 direction)
-	{
-		if (Mathf.Abs(direction.X) > Mathf.Abs(direction.Y))
-		{
+	private string GetDirectionName(Vector2 direction) {
+		if (Mathf.Abs(direction.X) > Mathf.Abs(direction.Y)) {
 			return direction.X > 0 ? "right" : "left";
 		}
 
