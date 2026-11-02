@@ -34,6 +34,8 @@
 [ext_resource type="Texture2D" uid="uid://bxa0ghmg2wetd" path="res://Assets/interior/frames/frame-s.png" id="31_kwxat"]
 [ext_resource type="Texture2D" uid="uid://c2f6o2768j84n" path="res://Assets/interior/frames/frame-inner-ne.png" id="32_aa8k8"]
 [ext_resource type="Texture2D" uid="uid://cq0i0b3rf3py2" path="res://Assets/factory-interior-props.png" id="33_neg2b"]
+[ext_resource type="PackedScene" uid="uid://bk6gs86yscsl4" path="res://Scenes/Door.tscn" id="34_hdf80"]
+[ext_resource type="PackedScene" uid="uid://b1cmh17oio80y" path="res://Scenes/Enemy.tscn" id="35_r33sp"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_bo1nx"]
 texture = ExtResource("1_jjgbg")
@@ -798,13 +800,19 @@ tile_set = SubResource("TileSet_oxund")
 
 [node name="DecorationLayer" type="TileMapLayer" parent="Environment" unique_id=223565191]
 position = Vector2(-3, 12)
-tile_map_data = PackedByteArray("AAAaAA4AAAAhAAgAAAAaAA8AAAAhAAkAAAAaABAAAAAhAAoAAAAaABEAAAAhAAsAAAAbAA4AAAAiAAgAAAAbAA8AAAAiAAkAAAAbABAAAAAiAAoAAAAbABEAAAAiAAsAAAAcAA4AAAAjAAgAAAAcAA8AAAAjAAkAAAAcABAAAAAjAAoAAAAcABEAAAAjAAsAAAAIAAYAAAAMAAUAAAAIAAcAAAAMAAYAAAAIAAgAAAAMAAcAAAAJAAYAAAANAAUAAAAJAAcAAAANAAYAAAAJAAgAAAANAAcAAAAKAAYAAAAOAAUAAAAKAAcAAAAOAAYAAAAKAAgAAAAOAAcAAAALAAYAAAAMAAUAAAALAAcAAAAMAAYAAAALAAgAAAAMAAcAAAAMAAYAAAAPAAUAAAAMAAcAAAAPAAYAAAAMAAgAAAAPAAcAAAANAAYAAAANAAUAAAANAAcAAAANAAYAAAANAAgAAAANAAcAAAAOAAYAAAAOAAUAAAAOAAcAAAAOAAYAAAAOAAgAAAAOAAcAAAAPAAcAAAAPAAYAAAAPAAgAAAAPAAcAAAAQAAYAAAAPAAUAAAAQAAcAAAAPAAYAAAAQAAgAAAAPAAcAAAAPAAYAAAAPAAUAAAA=")
+tile_map_data = PackedByteArray("AAAaAA4AAAAhAAgAAAAaAA8AAAAhAAkAAAAaABAAAAAhAAoAAAAaABEAAAAhAAsAAAAbAA4AAAAiAAgAAAAbAA8AAAAiAAkAAAAbABAAAAAiAAoAAAAbABEAAAAiAAsAAAAcAA4AAAAjAAgAAAAcAA8AAAAjAAkAAAAcABAAAAAjAAoAAAAcABEAAAAjAAsAAAA=")
 tile_set = SubResource("TileSet_mr7de")
+
+[node name="Door" parent="Environment" unique_id=1805617126 instance=ExtResource("34_hdf80")]
+position = Vector2(276, 192)
 
 [node name="Actors" type="Node2D" parent="." unique_id=576906086]
 
 [node name="Player" parent="Actors" unique_id=168021641 instance=ExtResource("21_pdsj5")]
 position = Vector2(281, 293)
+
+[node name="Enemy" parent="Actors" unique_id=406006321 instance=ExtResource("35_r33sp")]
+position = Vector2(447, 143)
 
 [node name="Gameplay" type="Node2D" parent="." unique_id=971751614]
 
