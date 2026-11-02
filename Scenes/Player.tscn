@@ -254,7 +254,7 @@ animations = [{
 "duration": 1.0,
 "texture": SubResource("AtlasTexture_c43xd")
 }],
-"loop": false,
+"loop": 0,
 "name": &"player_fire",
 "speed": 12.0
 }]
@@ -263,9 +263,10 @@ animations = [{
 radius = 6.0
 height = 26.0
 
-[node name="Player" type="CharacterBody2D" unique_id=168021641]
+[node name="Player" type="CharacterBody2D" groups=["player"] unique_id=168021641]
 z_index = 2
 collision_layer = 2
+collision_mask = 5
 script = ExtResource("1_kyqiw")
 ProjectileScene = ExtResource("2_dewec")
 
@@ -291,6 +292,7 @@ color = Color(0.19325441, 0.19109356, 0.22482523, 1)
 polygon = PackedVector2Array(-3.5, -1.5, -3.5, 1.5, -1, 1.5, -1.5, 3, 0.25, 3, 1, 1.5, 10, 1.5, 10, 0.5, 12, 0.5, 12, -0.5, 10, -0.5, 10, -1.5)
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1981891433]
+position = Vector2(0, 2)
 shape = SubResource("CapsuleShape2D_qbkls")
 
 [node name="Camera2D" type="Camera2D" parent="." unique_id=1122963074]
