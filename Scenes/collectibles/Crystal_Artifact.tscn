@@ -1,0 +1,66 @@
+[gd_scene format=3 uid="uid://b36jut2mwgllt"]
+
+[ext_resource type="Texture2D" uid="uid://ubfkl4eth7lu" path="res://Assets/fx/crystal-spin-6f.png" id="1_qhsyu"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_cs28g"]
+atlas = ExtResource("1_qhsyu")
+region = Rect2(0, 0, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_vso4l"]
+atlas = ExtResource("1_qhsyu")
+region = Rect2(16, 0, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_exvwm"]
+atlas = ExtResource("1_qhsyu")
+region = Rect2(32, 0, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_fsh6v"]
+atlas = ExtResource("1_qhsyu")
+region = Rect2(48, 0, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_flegw"]
+atlas = ExtResource("1_qhsyu")
+region = Rect2(64, 0, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_xa0o6"]
+atlas = ExtResource("1_qhsyu")
+region = Rect2(80, 0, 16, 16)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_oaf1h"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_cs28g")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_vso4l")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_exvwm")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_fsh6v")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_flegw")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_xa0o6")
+}],
+"loop": 1,
+"name": &"default",
+"speed": 5.0
+}]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_oaf1h"]
+radius = 5.0
+
+[node name="CrystalArtifact" type="Area2D" unique_id=262913527]
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=940743770]
+texture_filter = 1
+sprite_frames = SubResource("SpriteFrames_oaf1h")
+frame_progress = 0.7330915
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1100410637]
+shape = SubResource("CircleShape2D_oaf1h")
