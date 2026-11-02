@@ -21,6 +21,16 @@ public partial class PlayerController : CharacterBody2D {
 	[Export(PropertyHint.Range, "0,45,1")]
 	public float UpwardAimThresholdDegrees { get; set; } = 25.0f;
 
+	[ExportGroup("Weapon Settings")]
+	[Export]
+	public PackedScene ProjectileScene { get; set; }
+
+	[Export]
+	public float FireRate { get; set; } = 0.2f;
+
+	private float _fireCooldown = 0.0f;
+	private AnimatedSprite2D _muzzleFlash;
+
 	private AnimatedSprite2D _sprite;
 	private Vector2 _lastDirection = Vector2.Down;
 	private Node2D _weaponPivot;
@@ -37,6 +47,15 @@ public partial class PlayerController : CharacterBody2D {
 	public override void _Ready() {
 		_sprite = GetNode<AnimatedSprite2D>("Visuals/AnimatedSprite2D");
 		_weaponPivot = GetNode<Node2D>("WeaponPivot");
+		_muzzleFlash = GetNode<AnimatedSprite2D>("WeaponPivot/MuzzleFlash");
+
+		if (_muzzleFlash != null) {
+			_muzzleFlash.Visible = false;
+			if (_muzzleFlash.SpriteFrames != null && _muzzleFlash.SpriteFrames.HasAnimation("player_fire")) {
+				_muzzleFlash.SpriteFrames.SetAnimationLoopMode("player_fire", SpriteFrames.LoopMode.None);
+			}
+			_muzzleFlash.AnimationFinished += OnMuzzleFlashFinished;
+		}
 
 		PlayIdleAnimation();
 		UpdateWeaponPosition();
@@ -61,6 +80,13 @@ public partial class PlayerController : CharacterBody2D {
 
 		UpdateAnimation(direction);
 		UpdateAim();
+
+		_fireCooldown -= (float)delta;
+
+		if (Input.IsActionPressed("shoot") && _fireCooldown <= 0.0f) {
+			Shoot();
+			_fireCooldown = FireRate;
+		}
 	}
 
 	private void UpdateFacingDirection(Vector2 direction) {
@@ -159,5 +185,36 @@ public partial class PlayerController : CharacterBody2D {
 		}
 
 		return direction.Y > 0 ? "down" : "up";
+	}
+
+	private void Shoot() {
+		if (ProjectileScene == null) {
+			GD.PushWarning("ProjectileScene is not assigned!");
+			return;
+		}
+
+		Projectile projectile = ProjectileScene.Instantiate<Projectile>();
+		GetTree().CurrentScene.AddChild(projectile);
+
+		projectile.GlobalPosition = _muzzleFlash.GlobalPosition;
+
+		Vector2 aimDirection = GetGlobalMousePosition() - projectile.GlobalPosition;
+		if (aimDirection.LengthSquared() < 0.001f) {
+			aimDirection = Vector2.Right.Rotated(_weaponPivot.Rotation);
+		}
+
+		projectile.Initialize(aimDirection);
+
+		if (_muzzleFlash != null) {
+			_muzzleFlash.Visible = true;
+			_muzzleFlash.Frame = 0;
+			_muzzleFlash.Play("player_fire");
+		}
+	}
+
+	private void OnMuzzleFlashFinished() {
+		if (_muzzleFlash != null) {
+			_muzzleFlash.Visible = false;
+		}
 	}
 }
