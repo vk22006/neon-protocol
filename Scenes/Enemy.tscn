@@ -414,7 +414,7 @@ animations = [{
 "duration": 1.0,
 "texture": SubResource("AtlasTexture_6s1gy")
 }],
-"loop": 1,
+"loop": 0,
 "name": &"attack_down",
 "speed": 5.0
 }, {
@@ -431,7 +431,7 @@ animations = [{
 "duration": 1.0,
 "texture": SubResource("AtlasTexture_qlal6")
 }],
-"loop": 1,
+"loop": 0,
 "name": &"attack_left",
 "speed": 5.0
 }, {
@@ -448,7 +448,7 @@ animations = [{
 "duration": 1.0,
 "texture": SubResource("AtlasTexture_imorw")
 }],
-"loop": 1,
+"loop": 0,
 "name": &"attack_right",
 "speed": 5.0
 }, {
@@ -465,7 +465,7 @@ animations = [{
 "duration": 1.0,
 "texture": SubResource("AtlasTexture_1vdrv")
 }],
-"loop": 1,
+"loop": 0,
 "name": &"attack_up",
 "speed": 5.0
 }, {
@@ -488,7 +488,7 @@ animations = [{
 "duration": 1.0,
 "texture": SubResource("AtlasTexture_p32ei")
 }],
-"loop": 1,
+"loop": 0,
 "name": &"enemy_death",
 "speed": 5.0
 }, {
@@ -508,7 +508,7 @@ animations = [{
 "duration": 1.0,
 "texture": SubResource("AtlasTexture_tivof")
 }],
-"loop": 1,
+"loop": 0,
 "name": &"hurt_down",
 "speed": 5.0
 }, {
@@ -528,7 +528,7 @@ animations = [{
 "duration": 1.0,
 "texture": SubResource("AtlasTexture_q1bo7")
 }],
-"loop": 1,
+"loop": 0,
 "name": &"hurt_left",
 "speed": 5.0
 }, {
@@ -548,7 +548,7 @@ animations = [{
 "duration": 1.0,
 "texture": SubResource("AtlasTexture_doij8")
 }],
-"loop": 1,
+"loop": 0,
 "name": &"hurt_right",
 "speed": 5.0
 }, {
@@ -568,7 +568,7 @@ animations = [{
 "duration": 1.0,
 "texture": SubResource("AtlasTexture_kkmta")
 }],
-"loop": 1,
+"loop": 0,
 "name": &"hurt_up",
 "speed": 5.0
 }, {
@@ -795,8 +795,7 @@ script = ExtResource("1_m1htj")
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="Visuals" unique_id=543868002]
 texture_filter = 1
 sprite_frames = SubResource("SpriteFrames_oaf1h")
-animation = &"enemy_death"
-frame_progress = 0.24816932
+animation = &"idle_down"
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1975493312]
 position = Vector2(0, 1)
