@@ -36,6 +36,26 @@
 [ext_resource type="Texture2D" uid="uid://cq0i0b3rf3py2" path="res://Assets/factory-interior-props.png" id="33_neg2b"]
 [ext_resource type="PackedScene" uid="uid://bk6gs86yscsl4" path="res://Scenes/Door.tscn" id="34_hdf80"]
 [ext_resource type="PackedScene" uid="uid://b1cmh17oio80y" path="res://Scenes/Enemy.tscn" id="35_r33sp"]
+[ext_resource type="Script" uid="uid://hud738492019" path="res://Scripts/HUD.cs" id="36_hud01"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_hud_bg"]
+bg_color = Color(0.08, 0.1, 0.14, 0.85)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.18, 0.35, 0.42, 1)
+corner_radius_top_left = 2
+corner_radius_top_right = 2
+corner_radius_bottom_right = 2
+corner_radius_bottom_left = 2
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_hud_fill"]
+bg_color = Color(0, 0.85, 0.65, 1)
+corner_radius_top_left = 2
+corner_radius_top_right = 2
+corner_radius_bottom_right = 2
+corner_radius_bottom_left = 2
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_bo1nx"]
 texture = ExtResource("1_jjgbg")
@@ -817,3 +837,66 @@ position = Vector2(447, 143)
 [node name="Gameplay" type="Node2D" parent="." unique_id=971751614]
 
 [node name="UI" type="CanvasLayer" parent="." unique_id=220098163]
+
+[node name="HUD" type="Control" parent="UI" unique_id=129384756]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+script = ExtResource("36_hud01")
+
+[node name="HealthBarContainer" type="VBoxContainer" parent="UI/HUD" unique_id=982341256]
+layout_mode = 0
+offset_left = 16.0
+offset_top = 14.0
+offset_right = 166.0
+offset_bottom = 44.0
+theme_override_constants/separation = 2
+
+[node name="HealthLabel" type="Label" parent="UI/HUD/HealthBarContainer" unique_id=873214569]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.2, 0.9, 0.8, 1)
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 0.8)
+theme_override_font_sizes/font_size = 10
+text = "HP 100/100"
+
+[node name="HealthBar" type="ProgressBar" parent="UI/HUD/HealthBarContainer" unique_id=564738291]
+custom_minimum_size = Vector2(150, 10)
+layout_mode = 2
+theme_override_styles/background = SubResource("StyleBoxFlat_hud_bg")
+theme_override_styles/fill = SubResource("StyleBoxFlat_hud_fill")
+value = 100.0
+show_percentage = false
+
+[node name="GameOverContainer" type="CenterContainer" parent="UI/HUD" unique_id=345678912]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="GameOverBox" type="VBoxContainer" parent="UI/HUD/GameOverContainer" unique_id=789123456]
+layout_mode = 2
+theme_override_constants/separation = 4
+alignment = 1
+
+[node name="GameOverLabel" type="Label" parent="UI/HUD/GameOverContainer/GameOverBox" unique_id=654321987]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.95, 0.2, 0.25, 1)
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 0.9)
+theme_override_font_sizes/font_size = 32
+text = "GAME OVER"
+horizontal_alignment = 1
+
+[node name="SubtitleLabel" type="Label" parent="UI/HUD/GameOverContainer/GameOverBox" unique_id=432198765]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.7, 0.75, 0.8, 1)
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 0.9)
+theme_override_font_sizes/font_size = 12
+text = "SYSTEM COMPROMISED"
+horizontal_alignment = 1
