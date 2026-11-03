@@ -1,6 +1,7 @@
 [gd_scene format=3 uid="uid://b36jut2mwgllt"]
 
 [ext_resource type="Texture2D" uid="uid://ubfkl4eth7lu" path="res://Assets/fx/crystal-spin-6f.png" id="1_qhsyu"]
+[ext_resource type="Script" uid="uid://crystalfct1098" path="res://Scripts/CrystalArtifact.cs" id="2_cryst"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_cs28g"]
 atlas = ExtResource("1_qhsyu")
@@ -56,6 +57,9 @@ animations = [{
 radius = 5.0
 
 [node name="CrystalArtifact" type="Area2D" unique_id=262913527]
+collision_layer = 0
+collision_mask = 2
+script = ExtResource("2_cryst")
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=940743770]
 texture_filter = 1
