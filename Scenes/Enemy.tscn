@@ -6,6 +6,7 @@
 [ext_resource type="Texture2D" uid="uid://bvctq2ak76d14" path="res://Assets/characters/Enemy Right sprite sheet.png" id="4_kpr8r"]
 [ext_resource type="Texture2D" uid="uid://fsld856yp07t" path="res://Assets/characters/Enemy Up sprite sheet.png" id="5_1exfc"]
 [ext_resource type="Texture2D" uid="uid://yr72gvcf8eau" path="res://Assets/fx/smoke-puff-6f.png" id="6_mo1ky"]
+[ext_resource type="PackedScene" uid="uid://b36jut2mwgllt" path="res://Scenes/collectibles/Crystal_Artifact.tscn" id="7_cryst"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_uoxpr"]
 atlas = ExtResource("2_wovta")
@@ -785,10 +786,11 @@ animations = [{
 radius = 6.0
 height = 26.0
 
-[node name="Enemy" type="CharacterBody2D" unique_id=406006321]
+[node name="Enemy" type="CharacterBody2D" groups=["enemy"] unique_id=406006321]
 collision_layer = 4
 collision_mask = 3
 script = ExtResource("1_m1htj")
+CrystalDropScene = ExtResource("7_cryst")
 
 [node name="Visuals" type="Node2D" parent="." unique_id=516328571]
 
