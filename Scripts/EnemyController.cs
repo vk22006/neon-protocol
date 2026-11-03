@@ -8,6 +8,18 @@ public partial class EnemyController : CharacterBody2D {
 		Dead
 	}
 
+	[Signal]
+	public delegate void HealthChangedEventHandler(int currentHealth, int maxHealth);
+
+	[Signal]
+	public delegate void EnemyDiedEventHandler();
+
+	[Signal]
+	public delegate void EnemyDefeatedEventHandler();
+
+	[Export]
+	public PackedScene CrystalDropScene { get; set; }
+
 	[Export]
 	public float MoveSpeed { get; set; } = 60.0f;
 
@@ -40,13 +52,20 @@ public partial class EnemyController : CharacterBody2D {
 	private bool _attackDamageApplied = false;
 	private float _attackTimer = 0.0f;
 	private float _attackCooldownTimer = 0.0f;
+	private bool _hasDroppedReward = false;
 
 	public EnemyState CurrentState => _currentState;
+	public int CurrentHealth => _currentHealth;
 
 	public override void _Ready() {
+		if (!IsInGroup("enemy")) {
+			AddToGroup("enemy");
+		}
+
 		_sprite = GetNodeOrNull<AnimatedSprite2D>("Visuals/AnimatedSprite2D");
 		_collisionShape = GetNodeOrNull<CollisionShape2D>("CollisionShape2D");
 		_currentHealth = MaxHealth;
+		EmitSignal(SignalName.HealthChanged, _currentHealth, MaxHealth);
 
 		_player = GetTree().GetFirstNodeInGroup("player") as PlayerController
 			?? GetTree().GetFirstNodeInGroup("Player") as PlayerController;
@@ -170,8 +189,10 @@ public partial class EnemyController : CharacterBody2D {
 		_currentHealth -= damage;
 		if (_currentHealth <= 0) {
 			_currentHealth = 0;
+			EmitSignal(SignalName.HealthChanged, _currentHealth, MaxHealth);
 			Die();
 		} else {
+			EmitSignal(SignalName.HealthChanged, _currentHealth, MaxHealth);
 			_currentState = EnemyState.Hurt;
 			Velocity = Vector2.Zero;
 			UpdateAnimation("hurt", _lastDirection);
@@ -179,8 +200,13 @@ public partial class EnemyController : CharacterBody2D {
 	}
 
 	private void Die() {
+		if (_currentState == EnemyState.Dead) {
+			return;
+		}
+
 		_currentState = EnemyState.Dead;
 		Velocity = Vector2.Zero;
+		EmitSignal(SignalName.EnemyDied);
 
 		if (_collisionShape != null) {
 			_collisionShape.SetDeferred(CollisionShape2D.PropertyName.Disabled, true);
@@ -189,13 +215,36 @@ public partial class EnemyController : CharacterBody2D {
 		if (_sprite != null && _sprite.SpriteFrames != null && _sprite.SpriteFrames.HasAnimation("enemy_death")) {
 			_sprite.Play("enemy_death");
 		} else {
+			SpawnDeathReward();
 			QueueFree();
+		}
+	}
+
+	private void SpawnDeathReward() {
+		if (_hasDroppedReward) {
+			return;
+		}
+
+		_hasDroppedReward = true;
+		EmitSignal(SignalName.EnemyDefeated);
+
+		PackedScene scene = CrystalDropScene ?? GD.Load<PackedScene>("res://Scenes/collectibles/Crystal_Artifact.tscn");
+		if (scene != null) {
+			Node instance = scene.Instantiate();
+			if (instance is Node2D collectible) {
+				collectible.GlobalPosition = GlobalPosition;
+			}
+			Node targetParent = GetTree().CurrentScene ?? GetParent();
+			if (targetParent != null) {
+				targetParent.AddChild(instance);
+			}
 		}
 	}
 
 	private void OnAnimationFinished() {
 		if (_currentState == EnemyState.Dead) {
 			if (_sprite != null && _sprite.Animation == "enemy_death") {
+				SpawnDeathReward();
 				QueueFree();
 			}
 			return;
