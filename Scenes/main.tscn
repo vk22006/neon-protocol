@@ -36,26 +36,11 @@
 [ext_resource type="Texture2D" uid="uid://cq0i0b3rf3py2" path="res://Assets/factory-interior-props.png" id="33_neg2b"]
 [ext_resource type="PackedScene" uid="uid://bk6gs86yscsl4" path="res://Scenes/Door.tscn" id="34_hdf80"]
 [ext_resource type="PackedScene" uid="uid://b1cmh17oio80y" path="res://Scenes/Enemy.tscn" id="35_r33sp"]
-[ext_resource type="Script" uid="uid://hud738492019" path="res://Scripts/HUD.cs" id="36_hud01"]
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_hud_bg"]
-bg_color = Color(0.08, 0.1, 0.14, 0.85)
-border_width_left = 1
-border_width_top = 1
-border_width_right = 1
-border_width_bottom = 1
-border_color = Color(0.18, 0.35, 0.42, 1)
-corner_radius_top_left = 2
-corner_radius_top_right = 2
-corner_radius_bottom_right = 2
-corner_radius_bottom_left = 2
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_hud_fill"]
-bg_color = Color(0, 0.85, 0.65, 1)
-corner_radius_top_left = 2
-corner_radius_top_right = 2
-corner_radius_bottom_right = 2
-corner_radius_bottom_left = 2
+[ext_resource type="Script" uid="uid://hud7385a202a" path="res://Scripts/HUD.cs" id="36_hud01"]
+[ext_resource type="Theme" path="res://addons/pixel_ui_scifi/themes/cyan.tres" id="37_theme_cyan"]
+[ext_resource type="Texture2D" uid="uid://brbs2uk2xgnda" path="res://addons/pixel_ui_scifi/icons/heart.png" id="38_icon_heart"]
+[ext_resource type="Texture2D" uid="uid://c3dy1fpytxeyq" path="res://addons/crystal-ui.png" id="39_crystal_ui"]
+[ext_resource type="Script" uid="uid://lvlctl928374" path="res://Scripts/LevelController.cs" id="40_lvlctl"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_bo1nx"]
 texture = ExtResource("1_jjgbg")
@@ -836,9 +821,15 @@ position = Vector2(447, 143)
 
 [node name="Gameplay" type="Node2D" parent="." unique_id=971751614]
 
+[node name="LevelController" type="Node" parent="Gameplay" unique_id=182736450]
+script = ExtResource("40_lvlctl")
+DoorPath = NodePath("../../Environment/Door")
+EnemyPath = NodePath("../../Actors/Enemy")
+
 [node name="UI" type="CanvasLayer" parent="." unique_id=220098163]
 
 [node name="HUD" type="Control" parent="UI" unique_id=129384756]
+texture_filter = 1
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -846,30 +837,88 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
+theme = ExtResource("37_theme_cyan")
 script = ExtResource("36_hud01")
 
 [node name="HealthBarContainer" type="VBoxContainer" parent="UI/HUD" unique_id=982341256]
 layout_mode = 0
-offset_left = 16.0
-offset_top = 14.0
-offset_right = 166.0
+offset_left = 14.0
+offset_top = 12.0
+offset_right = 134.0
 offset_bottom = 44.0
 theme_override_constants/separation = 2
 
+[node name="PlayerHeader" type="HBoxContainer" parent="UI/HUD/HealthBarContainer" unique_id=102938475]
+layout_mode = 2
+theme_override_constants/separation = 4
+
+[node name="HeartIcon" type="TextureRect" parent="UI/HUD/HealthBarContainer/PlayerHeader" unique_id=203948576]
+custom_minimum_size = Vector2(8, 8)
+layout_mode = 2
+texture = ExtResource("38_icon_heart")
+expand_mode = 1
+stretch_mode = 3
+
+[node name="PlayerTitleLabel" type="Label" parent="UI/HUD/HealthBarContainer/PlayerHeader" unique_id=304958671]
+layout_mode = 2
+text = "PLAYER HP"
+
 [node name="HealthLabel" type="Label" parent="UI/HUD/HealthBarContainer" unique_id=873214569]
 layout_mode = 2
-theme_override_colors/font_color = Color(0.2, 0.9, 0.8, 1)
-theme_override_colors/font_shadow_color = Color(0, 0, 0, 0.8)
-theme_override_font_sizes/font_size = 10
-text = "HP 100/100"
+text = "100 / 100"
 
 [node name="HealthBar" type="ProgressBar" parent="UI/HUD/HealthBarContainer" unique_id=564738291]
-custom_minimum_size = Vector2(150, 10)
+custom_minimum_size = Vector2(100, 8)
 layout_mode = 2
-theme_override_styles/background = SubResource("StyleBoxFlat_hud_bg")
-theme_override_styles/fill = SubResource("StyleBoxFlat_hud_fill")
 value = 100.0
 show_percentage = false
+
+[node name="EnemyHealthContainer" type="VBoxContainer" parent="UI/HUD" unique_id=405968712]
+layout_mode = 0
+offset_left = 14.0
+offset_top = 52.0
+offset_right = 134.0
+offset_bottom = 84.0
+theme_override_constants/separation = 2
+
+[node name="EnemyTitleLabel" type="Label" parent="UI/HUD/EnemyHealthContainer" unique_id=506978823]
+layout_mode = 2
+text = "SECURITY BOT HP"
+
+[node name="EnemyHealthLabel" type="Label" parent="UI/HUD/EnemyHealthContainer" unique_id=607988934]
+layout_mode = 2
+text = "30 / 30"
+
+[node name="EnemyHealthBar" type="ProgressBar" parent="UI/HUD/EnemyHealthContainer" unique_id=708999045]
+custom_minimum_size = Vector2(100, 8)
+layout_mode = 2
+theme_type_variation = &"RedBar"
+value = 30.0
+show_percentage = false
+
+[node name="CrystalCounter" type="HBoxContainer" parent="UI/HUD" unique_id=809110156]
+layout_mode = 1
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -70.0
+offset_top = 12.0
+offset_right = -14.0
+offset_bottom = 28.0
+grow_horizontal = 0
+theme_override_constants/separation = 4
+alignment = 2
+
+[node name="CrystalIcon" type="TextureRect" parent="UI/HUD/CrystalCounter" unique_id=910221267]
+custom_minimum_size = Vector2(16, 16)
+layout_mode = 2
+texture = ExtResource("39_crystal_ui")
+expand_mode = 1
+stretch_mode = 3
+
+[node name="CrystalCountLabel" type="Label" parent="UI/HUD/CrystalCounter" unique_id=121332378]
+layout_mode = 2
+text = "00"
 
 [node name="GameOverContainer" type="CenterContainer" parent="UI/HUD" unique_id=345678912]
 visible = false
