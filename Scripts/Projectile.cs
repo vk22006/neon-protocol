@@ -13,11 +13,18 @@ public partial class Projectile : Area2D {
 	[Export]
 	public float VisualRotationOffset { get; set; } = Mathf.Pi / 2.0f;
 
+	[Export]
+	public int Damage { get; set; } = 10;
+
 	private Vector2 _direction = Vector2.Right;
 
 	public void Initialize(Vector2 direction) {
 		_direction = direction.Normalized();
 		Rotation = _direction.Angle() + VisualRotationOffset;
+	}
+
+	public override void _Ready() {
+		BodyEntered += OnBodyEntered;
 	}
 
 	public override void _PhysicsProcess(double delta) {
@@ -26,6 +33,15 @@ public partial class Projectile : Area2D {
 		Lifetime -= (float)delta;
 
 		if (Lifetime <= 0.0f) {
+			QueueFree();
+		}
+	}
+
+	private void OnBodyEntered(Node2D body) {
+		if (body is EnemyController enemy) {
+			enemy.TakeDamage(Damage);
+			QueueFree();
+		} else if (body is TileMapLayer || body is StaticBody2D) {
 			QueueFree();
 		}
 	}
