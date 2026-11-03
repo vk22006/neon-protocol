@@ -35,6 +35,23 @@ public partial class PlayerController : CharacterBody2D {
 	private Vector2 _lastDirection = Vector2.Down;
 	private Node2D _weaponPivot;
 
+	// Health Properties and Signals
+	[Signal]
+	public delegate void HealthChangedEventHandler(int currentHealth, int maxHealth);
+
+	[Signal]
+	public delegate void PlayerDiedEventHandler();
+
+	[ExportGroup("Player Health")]
+	[Export]
+	public int MaxHealth { get; set; } = 100;
+
+	private int _currentHealth;
+	private bool _isDead = false;
+
+	public int CurrentHealth => _currentHealth;
+	public bool IsDead => _isDead;
+
 	private enum FacingDirection {
 		Up,
 		Down,
@@ -52,6 +69,8 @@ public partial class PlayerController : CharacterBody2D {
 		_sprite = GetNode<AnimatedSprite2D>("Visuals/AnimatedSprite2D");
 		_weaponPivot = GetNode<Node2D>("WeaponPivot");
 		_muzzleFlash = GetNode<AnimatedSprite2D>("WeaponPivot/MuzzleFlash");
+		_currentHealth = MaxHealth;
+		EmitSignal(SignalName.HealthChanged, _currentHealth, MaxHealth);
 
 		if (_muzzleFlash != null) {
 			_muzzleFlash.Visible = false;
@@ -66,6 +85,8 @@ public partial class PlayerController : CharacterBody2D {
 	}
 
 	public override void _PhysicsProcess(double delta) {
+		if (_isDead) return;
+
 		Vector2 direction = Input.GetVector(
 			"move_left",
 			"move_right",
@@ -220,5 +241,40 @@ public partial class PlayerController : CharacterBody2D {
 		if (_muzzleFlash != null) {
 			_muzzleFlash.Visible = false;
 		}
+	}
+
+	public void TakeDamage(int damage) {
+		if (_isDead || damage <= 0) {
+			return;
+		}
+
+		if (damage >= _currentHealth) {
+			_currentHealth = 0;
+		} else {
+			_currentHealth -= damage;
+		}
+
+		GD.Print($"Player Health: {_currentHealth}/{MaxHealth}");
+		EmitSignal(SignalName.HealthChanged, _currentHealth, MaxHealth);
+
+		if (_currentHealth <= 0) {
+			Die();
+		}
+	}
+
+	private void Die() {
+		_isDead = true;
+		Velocity = Vector2.Zero;
+
+		SetPhysicsProcess(false);
+
+		if (_weaponPivot != null) {
+			_weaponPivot.Visible = false;
+		}
+
+		PlayIdleAnimation();
+
+		EmitSignal(SignalName.PlayerDied);
+		GD.Print("Player has died!");
 	}
 }
