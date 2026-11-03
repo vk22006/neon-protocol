@@ -42,15 +42,25 @@ public partial class PlayerController : CharacterBody2D {
 	[Signal]
 	public delegate void PlayerDiedEventHandler();
 
+	[Signal]
+	public delegate void CrystalCountChangedEventHandler(int count);
+
 	[ExportGroup("Player Health")]
 	[Export]
 	public int MaxHealth { get; set; } = 100;
 
 	private int _currentHealth;
 	private bool _isDead = false;
+	private int _crystalCount = 0;
 
 	public int CurrentHealth => _currentHealth;
 	public bool IsDead => _isDead;
+	public int CrystalCount => _crystalCount;
+
+	public void CollectCrystal(int amount = 1) {
+		_crystalCount += amount;
+		EmitSignal(SignalName.CrystalCountChanged, _crystalCount);
+	}
 
 	private enum FacingDirection {
 		Up,
@@ -71,6 +81,7 @@ public partial class PlayerController : CharacterBody2D {
 		_muzzleFlash = GetNode<AnimatedSprite2D>("WeaponPivot/MuzzleFlash");
 		_currentHealth = MaxHealth;
 		EmitSignal(SignalName.HealthChanged, _currentHealth, MaxHealth);
+		EmitSignal(SignalName.CrystalCountChanged, _crystalCount);
 
 		if (_muzzleFlash != null) {
 			_muzzleFlash.Visible = false;
