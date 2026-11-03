@@ -1,6 +1,7 @@
 [gd_scene format=3 uid="uid://bk6gs86yscsl4"]
 
 [ext_resource type="Texture2D" uid="uid://36tm0eyd5voe" path="res://Assets/interior/doors/door-4f.png" id="1_38ogf"]
+[ext_resource type="Script" uid="uid://doorctl0102" path="res://Scripts/DoorController.cs" id="2_doorctl"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_mw28t"]
 atlas = ExtResource("1_38ogf")
@@ -45,16 +46,25 @@ animations = [{
 "duration": 1.0,
 "texture": SubResource("AtlasTexture_g50tm")
 }],
-"loop": 1,
+"loop": 0,
 "name": &"success",
 "speed": 5.0
 }]
 
-[node name="Door" type="Area2D" unique_id=1805617126]
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_door"]
+size = Vector2(16, 32)
 
-[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=2065272919]
+[node name="Door" type="Node2D" unique_id=1805617126 groups=["door"]]
+script = ExtResource("2_doorctl")
+
+[node name="DoorVisuals" type="AnimatedSprite2D" parent="." unique_id=2065272919]
 texture_filter = 1
 sprite_frames = SubResource("SpriteFrames_oaf1h")
-frame_progress = 0.10282726
+animation = &"default"
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="AnimatedSprite2D" unique_id=88416932]
+[node name="DoorCollision" type="StaticBody2D" parent="." unique_id=305948172]
+collision_layer = 1
+collision_mask = 0
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="DoorCollision" unique_id=88416932]
+shape = SubResource("RectangleShape2D_door")
