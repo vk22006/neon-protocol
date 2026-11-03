@@ -48,7 +48,7 @@ animations = [{
 "texture": SubResource("AtlasTexture_xa0o6")
 }],
 "loop": 1,
-"name": &"default",
+"name": &"spin",
 "speed": 5.0
 }]
 
@@ -60,7 +60,7 @@ radius = 5.0
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=940743770]
 texture_filter = 1
 sprite_frames = SubResource("SpriteFrames_oaf1h")
-frame_progress = 0.7330915
+animation = &"spin"
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1100410637]
 shape = SubResource("CircleShape2D_oaf1h")
