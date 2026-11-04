@@ -61,6 +61,12 @@ public partial class EnemyController : CharacterBody2D {
 		if (!IsInGroup("enemy")) {
 			AddToGroup("enemy");
 		}
+		if (!IsInGroup("enemies")) {
+			AddToGroup("enemies");
+		}
+
+		LevelController levelController = GetTree().GetFirstNodeInGroup("level_controller") as LevelController;
+		levelController?.RegisterEnemy(this);
 
 		_sprite = GetNodeOrNull<AnimatedSprite2D>("Visuals/AnimatedSprite2D");
 		_collisionShape = GetNodeOrNull<CollisionShape2D>("CollisionShape2D");
