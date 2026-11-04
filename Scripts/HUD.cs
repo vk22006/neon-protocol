@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using Godot;
 
 public partial class HUD : Control {
@@ -31,6 +32,7 @@ public partial class HUD : Control {
 	private Control _gameOverContainer;
 
 	private EnemyController _trackedEnemy;
+	private readonly HashSet<EnemyController> _connectedEnemies = new();
 
 	public override void _Ready() {
 		_healthBar = GetNodeOrNull<ProgressBar>(HealthBarPath);
@@ -60,25 +62,78 @@ public partial class HUD : Control {
 			GD.PushWarning("HUD could not find Player in group 'player'!");
 		}
 
-		EnemyController enemy = GetTree().GetFirstNodeInGroup("enemy") as EnemyController
-			?? GetTree().GetFirstNodeInGroup("Enemy") as EnemyController;
+		LevelController levelController = GetTree().GetFirstNodeInGroup("level_controller") as LevelController;
+		if (levelController != null) {
+			levelController.EnemyRegistered += OnEnemyRegistered;
+			levelController.AllEnemiesDefeated += OnAllEnemiesDefeated;
+		}
 
-		if (enemy != null) {
-			TrackEnemy(enemy);
+		DiscoverAndConnectEnemies();
+	}
+
+	public override void _ExitTree() {
+		UntrackEnemy();
+		_connectedEnemies.Clear();
+	}
+
+	private void DiscoverAndConnectEnemies() {
+		var enemies = GetTree().GetNodesInGroup("enemies");
+		foreach (Node node in enemies) {
+			if (node is EnemyController enemy) {
+				OnEnemyRegistered(enemy);
+			}
+		}
+
+		var singleGroup = GetTree().GetNodesInGroup("enemy");
+		foreach (Node node in singleGroup) {
+			if (node is EnemyController enemy) {
+				OnEnemyRegistered(enemy);
+			}
+		}
+
+		EnemyController livingEnemy = FindLivingEnemy();
+		if (livingEnemy != null) {
+			TrackEnemy(livingEnemy);
 		} else if (_enemyHealthContainer != null) {
 			_enemyHealthContainer.Visible = false;
 		}
 	}
 
-	public override void _ExitTree() {
-		UntrackEnemy();
+	private void OnEnemyRegistered(EnemyController enemy) {
+		if (enemy == null || !GodotObject.IsInstanceValid(enemy)) {
+			return;
+		}
+
+		if (_connectedEnemies.Add(enemy)) {
+			enemy.HealthChanged += (current, max) => OnAnyEnemyHealthChanged(enemy, current, max);
+
+			if (_trackedEnemy == null && enemy.CurrentState != EnemyController.EnemyState.Dead) {
+				TrackEnemy(enemy);
+			}
+		}
+	}
+
+	private void OnAnyEnemyHealthChanged(EnemyController enemy, int currentHealth, int maxHealth) {
+		if (!GodotObject.IsInstanceValid(enemy)) {
+			return;
+		}
+
+		// When an enemy takes damage, switch focus to it if it's alive or dying
+		if (_trackedEnemy != enemy && enemy.CurrentState != EnemyController.EnemyState.Dead) {
+			TrackEnemy(enemy);
+		} else if (_trackedEnemy == enemy) {
+			OnEnemyHealthChanged(currentHealth, maxHealth);
+		}
 	}
 
 	public void TrackEnemy(EnemyController enemy) {
 		UntrackEnemy();
 
 		if (!GodotObject.IsInstanceValid(enemy)) {
-			if (_enemyHealthContainer != null) {
+			EnemyController fallback = FindLivingEnemy();
+			if (fallback != null) {
+				TrackEnemy(fallback);
+			} else if (_enemyHealthContainer != null) {
 				_enemyHealthContainer.Visible = false;
 			}
 			return;
@@ -105,6 +160,24 @@ public partial class HUD : Control {
 		_trackedEnemy = null;
 	}
 
+	private EnemyController FindLivingEnemy() {
+		var enemies = GetTree().GetNodesInGroup("enemies");
+		foreach (Node node in enemies) {
+			if (node is EnemyController enemy && GodotObject.IsInstanceValid(enemy) && enemy.CurrentState != EnemyController.EnemyState.Dead && enemy.CurrentHealth > 0) {
+				return enemy;
+			}
+		}
+
+		var singleGroup = GetTree().GetNodesInGroup("enemy");
+		foreach (Node node in singleGroup) {
+			if (node is EnemyController enemy && GodotObject.IsInstanceValid(enemy) && enemy.CurrentState != EnemyController.EnemyState.Dead && enemy.CurrentHealth > 0) {
+				return enemy;
+			}
+		}
+
+		return null;
+	}
+
 	private void OnEnemyHealthChanged(int currentHealth, int maxHealth) {
 		if (_enemyHealthBar != null) {
 			_enemyHealthBar.MaxValue = maxHealth;
@@ -117,17 +190,32 @@ public partial class HUD : Control {
 	}
 
 	private void OnEnemyDied() {
-		if (_enemyHealthContainer != null) {
+		UntrackEnemy();
+
+		EnemyController nextEnemy = FindLivingEnemy();
+		if (nextEnemy != null) {
+			TrackEnemy(nextEnemy);
+		} else if (_enemyHealthContainer != null) {
 			_enemyHealthContainer.Visible = false;
 		}
-		UntrackEnemy();
 	}
 
 	private void OnEnemyTreeExiting() {
+		UntrackEnemy();
+
+		EnemyController nextEnemy = FindLivingEnemy();
+		if (nextEnemy != null) {
+			TrackEnemy(nextEnemy);
+		} else if (_enemyHealthContainer != null) {
+			_enemyHealthContainer.Visible = false;
+		}
+	}
+
+	private void OnAllEnemiesDefeated() {
+		UntrackEnemy();
 		if (_enemyHealthContainer != null) {
 			_enemyHealthContainer.Visible = false;
 		}
-		UntrackEnemy();
 	}
 
 	private void OnPlayerHealthChanged(int currentHealth, int maxHealth) {
