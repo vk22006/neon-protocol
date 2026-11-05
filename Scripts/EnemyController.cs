@@ -40,12 +40,20 @@ public partial class EnemyController : CharacterBody2D {
 	[Export]
 	public int MaxHealth { get; set; } = 30;
 
+	[Export]
+	public NodePath HealthBarPath { get; set; } = "HealthBarAnchor/EnemyHealthBar";
+
+	[Export]
+	public NodePath HealthBarAnchorPath { get; set; } = "HealthBarAnchor";
+
 	private EnemyState _currentState = EnemyState.Chasing;
 	private int _currentHealth;
 
 	private PlayerController _player;
 	private AnimatedSprite2D _sprite;
 	private CollisionShape2D _collisionShape;
+	private ProgressBar _healthBar;
+	private CanvasItem _healthBarAnchor;
 
 	private Vector2 _lastDirection = Vector2.Down;
 
@@ -70,7 +78,20 @@ public partial class EnemyController : CharacterBody2D {
 
 		_sprite = GetNodeOrNull<AnimatedSprite2D>("Visuals/AnimatedSprite2D");
 		_collisionShape = GetNodeOrNull<CollisionShape2D>("CollisionShape2D");
+		_healthBar = GetNodeOrNull<ProgressBar>(HealthBarPath);
+		_healthBarAnchor = GetNodeOrNull<CanvasItem>(HealthBarAnchorPath);
 		_currentHealth = MaxHealth;
+
+		if (_healthBar != null) {
+			_healthBar.MaxValue = MaxHealth;
+			_healthBar.Value = _currentHealth;
+			_healthBar.Visible = true;
+		}
+
+		if (_healthBarAnchor != null) {
+			_healthBarAnchor.Visible = true;
+		}
+
 		EmitSignal(SignalName.HealthChanged, _currentHealth, MaxHealth);
 
 		_player = GetTree().GetFirstNodeInGroup("player") as PlayerController
@@ -195,13 +216,21 @@ public partial class EnemyController : CharacterBody2D {
 		_currentHealth -= damage;
 		if (_currentHealth <= 0) {
 			_currentHealth = 0;
+			UpdateHealthBar();
 			EmitSignal(SignalName.HealthChanged, _currentHealth, MaxHealth);
 			Die();
 		} else {
+			UpdateHealthBar();
 			EmitSignal(SignalName.HealthChanged, _currentHealth, MaxHealth);
 			_currentState = EnemyState.Hurt;
 			Velocity = Vector2.Zero;
 			UpdateAnimation("hurt", _lastDirection);
+		}
+	}
+
+	private void UpdateHealthBar() {
+		if (_healthBar != null && _currentState != EnemyState.Dead) {
+			_healthBar.Value = _currentHealth;
 		}
 	}
 
@@ -213,6 +242,12 @@ public partial class EnemyController : CharacterBody2D {
 		_currentState = EnemyState.Dead;
 		Velocity = Vector2.Zero;
 		EmitSignal(SignalName.EnemyDied);
+
+		if (_healthBarAnchor != null) {
+			_healthBarAnchor.Visible = false;
+		} else if (_healthBar != null) {
+			_healthBar.Visible = false;
+		}
 
 		if (_collisionShape != null) {
 			_collisionShape.SetDeferred(CollisionShape2D.PropertyName.Disabled, true);
