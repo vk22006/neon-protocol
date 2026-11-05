@@ -873,29 +873,6 @@ layout_mode = 2
 value = 100.0
 show_percentage = false
 
-[node name="EnemyHealthContainer" type="VBoxContainer" parent="UI/HUD" unique_id=405968712]
-layout_mode = 0
-offset_left = 14.0
-offset_top = 52.0
-offset_right = 134.0
-offset_bottom = 84.0
-theme_override_constants/separation = 2
-
-[node name="EnemyTitleLabel" type="Label" parent="UI/HUD/EnemyHealthContainer" unique_id=506978823]
-layout_mode = 2
-text = "SECURITY BOT HP"
-
-[node name="EnemyHealthLabel" type="Label" parent="UI/HUD/EnemyHealthContainer" unique_id=607988934]
-layout_mode = 2
-text = "30 / 30"
-
-[node name="EnemyHealthBar" type="ProgressBar" parent="UI/HUD/EnemyHealthContainer" unique_id=708999045]
-custom_minimum_size = Vector2(100, 8)
-layout_mode = 2
-theme_type_variation = &"RedBar"
-value = 30.0
-show_percentage = false
-
 [node name="CrystalCounter" type="HBoxContainer" parent="UI/HUD" unique_id=809110156]
 layout_mode = 1
 anchors_preset = 1
