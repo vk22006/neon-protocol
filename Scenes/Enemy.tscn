@@ -7,6 +7,7 @@
 [ext_resource type="Texture2D" uid="uid://fsld856yp07t" path="res://Assets/characters/Enemy Up sprite sheet.png" id="5_1exfc"]
 [ext_resource type="Texture2D" uid="uid://yr72gvcf8eau" path="res://Assets/fx/smoke-puff-6f.png" id="6_mo1ky"]
 [ext_resource type="PackedScene" uid="uid://b36jut2mwgllt" path="res://Scenes/collectibles/Crystal_Artifact.tscn" id="7_cryst"]
+[ext_resource type="Theme" uid="uid://b4po10m7x2tj6" path="res://addons/pixel_ui_scifi/themes/cyan.tres" id="8_theme_cyan"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_uoxpr"]
 atlas = ExtResource("2_wovta")
@@ -802,3 +803,20 @@ animation = &"idle_down"
 [node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1975493312]
 position = Vector2(0, 1)
 shape = SubResource("CapsuleShape2D_7fd37")
+
+[node name="HealthBarAnchor" type="Node2D" parent="." unique_id=718293041]
+z_index = 10
+position = Vector2(0, -20)
+
+[node name="EnemyHealthBar" type="ProgressBar" parent="HealthBarAnchor" unique_id=829304152]
+custom_minimum_size = Vector2(20, 5)
+offset_left = -10.0
+offset_top = -2.5
+offset_right = 10.0
+offset_bottom = 2.5
+mouse_filter = 2
+theme = ExtResource("8_theme_cyan")
+theme_type_variation = &"RedBar"
+max_value = 30.0
+value = 30.0
+show_percentage = false
