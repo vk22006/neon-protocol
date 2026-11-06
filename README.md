@@ -110,5 +110,8 @@ Requires the .NET SDK compatible with Godot 4.7.1.
 dotnet build
 ```
 
+## Asset Attribution
+All third-party assets, meshes, and textures are credited in [ATTRIBUTION.md](ATTRIBUTION.md).
+
 ## License
 This project uses MIT License. Refer [LICENSE](LICENSE) for more details.
