@@ -1965,6 +1965,7 @@ position = Vector2(480, 260)
 script = ExtResource("37_33kqp")
 DoorPath = NodePath("../../Environment/Door")
 EnemyPath = NodePath("../../Actors/Enemy")
+NextLevelPath = "res://Scenes/Levels/Level_3.tscn"
 
 [node name="UI" type="CanvasLayer" parent="." unique_id=220098163]
 
