@@ -4,17 +4,26 @@ public partial class DoorController : Node2D {
 	[Signal]
 	public delegate void DoorOpenedEventHandler();
 
+	[Signal]
+	public delegate void PlayerEnteredDoorEventHandler(PlayerController player);
+
 	[Export]
 	public NodePath DoorVisualsPath { get; set; } = "DoorVisuals";
 
 	[Export]
 	public NodePath CollisionShapePath { get; set; } = "DoorCollision/CollisionShape2D";
 
+	[Export]
+	public NodePath ExitAreaPath { get; set; } = "ExitArea";
+
 	private AnimatedSprite2D _doorVisuals;
 	private CollisionShape2D _collisionShape;
+	private Area2D _exitArea;
 	private bool _isOpen = false;
+	private bool _hasTriggeredExit = false;
 
 	public bool IsOpen => _isOpen;
+	public bool HasTriggeredExit => _hasTriggeredExit;
 
 	public override void _Ready() {
 		if (!IsInGroup("door")) {
@@ -24,11 +33,72 @@ public partial class DoorController : Node2D {
 		_doorVisuals = GetNodeOrNull<AnimatedSprite2D>(DoorVisualsPath);
 		_collisionShape = GetNodeOrNull<CollisionShape2D>(CollisionShapePath);
 
+		// Always ensure the door starts strictly in its closed state
+		_isOpen = false;
+		_hasTriggeredExit = false;
+
 		if (_doorVisuals != null) {
 			if (_doorVisuals.SpriteFrames != null && _doorVisuals.SpriteFrames.HasAnimation("success")) {
 				_doorVisuals.SpriteFrames.SetAnimationLoopMode("success", SpriteFrames.LoopMode.None);
 			}
 			_doorVisuals.AnimationFinished += OnAnimationFinished;
+			_doorVisuals.Stop();
+			_doorVisuals.Animation = "default";
+			_doorVisuals.Frame = 0;
+			_doorVisuals.Play("default");
+		}
+
+		if (_collisionShape != null) {
+			_collisionShape.SetDeferred(CollisionShape2D.PropertyName.Disabled, false);
+		}
+
+		SetupExitArea();
+	}
+
+	private void SetupExitArea() {
+		_exitArea = GetNodeOrNull<Area2D>(ExitAreaPath);
+		if (_exitArea == null) {
+			_exitArea = new Area2D {
+				Name = "ExitArea",
+				CollisionLayer = 0,
+				CollisionMask = 2 // Layer 2 is Player
+			};
+			CollisionShape2D col = new CollisionShape2D();
+			RectangleShape2D rect = new RectangleShape2D {
+				Size = new Vector2(16, 32)
+			};
+			col.Shape = rect;
+			_exitArea.AddChild(col);
+			AddChild(_exitArea);
+		}
+
+		_exitArea.BodyEntered += OnExitAreaBodyEntered;
+	}
+
+	private void OnExitAreaBodyEntered(Node2D body) {
+		TryTriggerPlayerExit(body);
+	}
+
+	private void TryTriggerPlayerExit(Node2D body) {
+		if (_hasTriggeredExit || !_isOpen) {
+			return;
+		}
+
+		if (body is PlayerController player && !player.IsDead) {
+			_hasTriggeredExit = true;
+			GD.Print("[DoorController] Player entered open door. Emitting PlayerEnteredDoor signal.");
+			EmitSignal(SignalName.PlayerEnteredDoor, player);
+		}
+	}
+
+	public void Close() {
+		_isOpen = false;
+		_hasTriggeredExit = false;
+
+		if (_doorVisuals != null) {
+			_doorVisuals.Stop();
+			_doorVisuals.Animation = "default";
+			_doorVisuals.Frame = 0;
 			_doorVisuals.Play("default");
 		}
 
@@ -51,6 +121,7 @@ public partial class DoorController : Node2D {
 				_collisionShape.SetDeferred(CollisionShape2D.PropertyName.Disabled, true);
 			}
 			EmitSignal(SignalName.DoorOpened);
+			CheckForOverlappingPlayer();
 		}
 	}
 
@@ -60,6 +131,21 @@ public partial class DoorController : Node2D {
 				_collisionShape.SetDeferred(CollisionShape2D.PropertyName.Disabled, true);
 			}
 			EmitSignal(SignalName.DoorOpened);
+			CheckForOverlappingPlayer();
+		}
+	}
+
+	private void CheckForOverlappingPlayer() {
+		if (_hasTriggeredExit || !_isOpen || _exitArea == null) {
+			return;
+		}
+
+		var bodies = _exitArea.GetOverlappingBodies();
+		foreach (Node2D body in bodies) {
+			TryTriggerPlayerExit(body);
+			if (_hasTriggeredExit) {
+				break;
+			}
 		}
 	}
 }
