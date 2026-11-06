@@ -59,7 +59,25 @@ public partial class PlayerController : CharacterBody2D {
 
 	public void CollectCrystal(int amount = 1) {
 		_crystalCount += amount;
+		LevelController.PreservedCrystalCount = _crystalCount;
 		EmitSignal(SignalName.CrystalCountChanged, _crystalCount);
+	}
+
+	public void SetCrystalCount(int count) {
+		_crystalCount = Mathf.Max(0, count);
+		LevelController.PreservedCrystalCount = _crystalCount;
+		EmitSignal(SignalName.CrystalCountChanged, _crystalCount);
+	}
+
+	private bool _inputEnabled = true;
+	public bool InputEnabled => _inputEnabled;
+
+	public void SetInputEnabled(bool enabled) {
+		_inputEnabled = enabled;
+		if (!enabled) {
+			Velocity = Vector2.Zero;
+			PlayIdleAnimation();
+		}
 	}
 
 	private enum FacingDirection {
@@ -80,6 +98,7 @@ public partial class PlayerController : CharacterBody2D {
 		_weaponPivot = GetNode<Node2D>("WeaponPivot");
 		_muzzleFlash = GetNode<AnimatedSprite2D>("WeaponPivot/MuzzleFlash");
 		_currentHealth = MaxHealth;
+		_crystalCount = LevelController.PreservedCrystalCount;
 		EmitSignal(SignalName.HealthChanged, _currentHealth, MaxHealth);
 		EmitSignal(SignalName.CrystalCountChanged, _crystalCount);
 
@@ -93,10 +112,14 @@ public partial class PlayerController : CharacterBody2D {
 
 		PlayIdleAnimation();
 		UpdateWeaponPosition();
+
+		if (SceneTransition.IsTransitioning) {
+			SetInputEnabled(false);
+		}
 	}
 
 	public override void _PhysicsProcess(double delta) {
-		if (_isDead) return;
+		if (_isDead || !_inputEnabled) return;
 
 		Vector2 direction = Input.GetVector(
 			"move_left",
