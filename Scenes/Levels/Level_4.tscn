@@ -1974,7 +1974,7 @@ tile_map_data = PackedByteArray("AAALAAgAEAAAAA8AAAAMAAgAEAABAA8AAAANAAgAEAAAAA8
 tile_set = SubResource("TileSet_mr7de")
 
 [node name="Door" parent="Environment" unique_id=1805617126 instance=ExtResource("35_u2ru6")]
-position = Vector2(753, 144)
+position = Vector2(757, 144)
 
 [node name="Actors" type="Node2D" parent="." unique_id=576906086]
 
@@ -1999,6 +1999,7 @@ position = Vector2(688, 192)
 script = ExtResource("38_appn4")
 DoorPath = NodePath("../../Environment/Door")
 EnemyPath = NodePath("../../Actors/Enemy")
+NextLevelPath = "res://Scenes/Levels/Level_5.tscn"
 
 [node name="UI" type="CanvasLayer" parent="." unique_id=220098163]
 
