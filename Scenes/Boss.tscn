@@ -1,11 +1,16 @@
 [gd_scene format=3 uid="uid://bflibc5xnqwvr"]
 
+[ext_resource type="Script" path="res://Scripts/BossController.cs" id="1_boss_script"]
+[ext_resource type="PackedScene" uid="uid://dkyiqr6q23i7g" path="res://Scenes/BossLaser.tscn" id="2_laser_scene"]
 [ext_resource type="Texture2D" uid="uid://bkwl668p10b7x" path="res://Assets/characters/boss/Robot Death.png" id="1_j5nlm"]
+[ext_resource type="Texture2D" uid="uid://gxuv3uwh7sxv" path="res://Assets/fx/shockwave-6f.png" id="2_6tp3b"]
 [ext_resource type="Texture2D" uid="uid://btf8yv5wnidmf" path="res://Assets/characters/boss/Robot Hurt.png" id="2_ouxnj"]
 [ext_resource type="Texture2D" uid="uid://bdcj63qik0v3q" path="res://Assets/characters/boss/Robot Idle.png" id="3_6tp3b"]
 [ext_resource type="Texture2D" uid="uid://uk3lesl4gboi" path="res://Assets/characters/boss/robot run with gun.png" id="4_0gjka"]
 [ext_resource type="Texture2D" uid="uid://dvhi04onf3kk4" path="res://Assets/characters/boss/robot shooting.png" id="5_iy1o6"]
 [ext_resource type="Texture2D" uid="uid://nrwe728uc80x" path="res://Assets/characters/boss/Laser gun/laser gun animation.png" id="6_ouxnj"]
+[ext_resource type="PackedScene" uid="uid://b36jut2mwgllt" path="res://Scenes/collectibles/Crystal_Artifact.tscn" id="7_cryst"]
+[ext_resource type="Theme" uid="uid://b4po10m7x2tj6" path="res://addons/pixel_ui_scifi/themes/cyan.tres" id="8_theme_cyan"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_cnrqi"]
 atlas = ExtResource("1_j5nlm")
@@ -62,6 +67,30 @@ region = Rect2(12000, 0, 1000, 1000)
 [sub_resource type="AtlasTexture" id="AtlasTexture_nitbp"]
 atlas = ExtResource("1_j5nlm")
 region = Rect2(13000, 0, 1000, 1000)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_veixi"]
+atlas = ExtResource("2_6tp3b")
+region = Rect2(0, 0, 48, 48)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_7oyi1"]
+atlas = ExtResource("2_6tp3b")
+region = Rect2(48, 0, 48, 48)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_8kih1"]
+atlas = ExtResource("2_6tp3b")
+region = Rect2(96, 0, 48, 48)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_t0iri"]
+atlas = ExtResource("2_6tp3b")
+region = Rect2(144, 0, 48, 48)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_d40i4"]
+atlas = ExtResource("2_6tp3b")
+region = Rect2(192, 0, 48, 48)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_stir4"]
+atlas = ExtResource("2_6tp3b")
+region = Rect2(240, 0, 48, 48)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_3h3yq"]
 atlas = ExtResource("2_ouxnj")
@@ -175,6 +204,24 @@ animations = [{
 }, {
 "duration": 1.0,
 "texture": SubResource("AtlasTexture_nitbp")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_veixi")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_7oyi1")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_8kih1")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_t0iri")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_d40i4")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_stir4")
 }],
 "loop": 1,
 "name": &"boss_death",
@@ -292,26 +339,48 @@ animations = [{
 radius = 8.0
 height = 46.0
 
-[node name="Boss" type="CharacterBody2D" unique_id=1162129578]
+[node name="Boss" type="CharacterBody2D" groups=["boss", "enemies", "enemy"] unique_id=1162129578]
+collision_layer = 4
+collision_mask = 3
+script = ExtResource("1_boss_script")
+LaserScene = ExtResource("2_laser_scene")
+CrystalDropScene = ExtResource("7_cryst")
 
 [node name="Visuals" type="Node2D" parent="." unique_id=1745154061]
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="Visuals" unique_id=1129530825]
+texture_filter = 1
 scale = Vector2(0.075, 0.075)
 sprite_frames = SubResource("SpriteFrames_ytmig")
-animation = &"boss_idle"
-frame_progress = 0.21837243
+animation = &"boss_shooting"
+frame_progress = 0.035591234
 
 [node name="WeaponPivot" type="Node2D" parent="." unique_id=1865734958]
 
-[node name="WeaponSprite" type="AnimatedSprite2D" parent="WeaponPivot" unique_id=233888753]
+[node name="LaserGun" type="AnimatedSprite2D" parent="WeaponPivot" unique_id=233888753]
+texture_filter = 1
 scale = Vector2(0.075, 0.075)
 sprite_frames = SubResource("SpriteFrames_j5nlm")
 animation = &"lazer_shoot"
-frame_progress = 0.67050767
-
-[node name="Muzzle" type="Marker2D" parent="WeaponPivot" unique_id=990705550]
+frame_progress = 0.6242144
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=2076452595]
 position = Vector2(0, 14)
 shape = SubResource("CapsuleShape2D_oaf1h")
+
+[node name="HealthBarAnchor" type="Node2D" parent="." unique_id=718293042]
+z_index = 10
+position = Vector2(0, -28)
+
+[node name="EnemyHealthBar" type="ProgressBar" parent="HealthBarAnchor" unique_id=829304153]
+custom_minimum_size = Vector2(30, 5)
+offset_left = -15.0
+offset_top = -2.5
+offset_right = 15.0
+offset_bottom = 2.5
+mouse_filter = 2
+theme = ExtResource("8_theme_cyan")
+theme_type_variation = &"RedBar"
+max_value = 200.0
+value = 200.0
+show_percentage = false
