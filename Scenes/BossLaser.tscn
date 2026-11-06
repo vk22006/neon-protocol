@@ -1,0 +1,52 @@
+[gd_scene format=3 uid="uid://dkyiqr6q23i7g"]
+
+[ext_resource type="Texture2D" uid="uid://dqps1qjanbj7x" path="res://Assets/characters/boss/Laser gun/laser gun projectile animation.png" id="1_8fjmw"]
+[ext_resource type="Script" path="res://Scripts/BossLaser.cs" id="2_bosslaser"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_dwjdj"]
+atlas = ExtResource("1_8fjmw")
+region = Rect2(0, 0, 1730, 270)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_co0uj"]
+atlas = ExtResource("1_8fjmw")
+region = Rect2(1730, 0, 1730, 270)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_py5ow"]
+atlas = ExtResource("1_8fjmw")
+region = Rect2(3460, 0, 1730, 270)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_oaf1h"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_dwjdj")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_co0uj")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_py5ow")
+}],
+"loop": 1,
+"name": &"laser_shoot",
+"speed": 5.0
+}]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_mk7g6"]
+size = Vector2(1638, 29)
+
+[node name="BossLaser" type="Area2D" unique_id=1737339278]
+collision_layer = 0
+collision_mask = 2
+scale = Vector2(0.075, 0.075)
+script = ExtResource("2_bosslaser")
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=913300357]
+texture_filter = 1
+sprite_frames = SubResource("SpriteFrames_oaf1h")
+animation = &"laser_shoot"
+frame_progress = 0.13913639
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=458604609]
+position = Vector2(45, -9.5)
+shape = SubResource("RectangleShape2D_mk7g6")
