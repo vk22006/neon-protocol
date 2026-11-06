@@ -254,4 +254,3 @@ public partial class SceneTransition : CanvasLayer {
 		}
 	}
 }
-
