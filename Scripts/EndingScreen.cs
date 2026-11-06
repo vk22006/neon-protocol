@@ -38,4 +38,3 @@ public partial class EndingScreen : Control {
 		SceneTransition.ChangeScene(GetTree(), "res://Scenes/Levels/Level_1.tscn");
 	}
 }
-
