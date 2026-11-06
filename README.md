@@ -109,3 +109,6 @@ Requires the .NET SDK compatible with Godot 4.7.1.
 ```bash
 dotnet build
 ```
+
+## License
+This project uses MIT License. Refer [LICENSE](LICENSE) for more details.
