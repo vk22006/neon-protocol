@@ -38,7 +38,7 @@ public partial class EnemyController : CharacterBody2D {
 
 	[ExportGroup("Health")]
 	[Export]
-	public int MaxHealth { get; set; } = 30;
+	public virtual int MaxHealth { get; set; } = 30;
 
 	[Export]
 	public NodePath HealthBarPath { get; set; } = "HealthBarAnchor/EnemyHealthBar";
@@ -46,8 +46,8 @@ public partial class EnemyController : CharacterBody2D {
 	[Export]
 	public NodePath HealthBarAnchorPath { get; set; } = "HealthBarAnchor";
 
-	private EnemyState _currentState = EnemyState.Chasing;
-	private int _currentHealth;
+	protected EnemyState _currentState = EnemyState.Chasing;
+	protected int _currentHealth;
 
 	private PlayerController _player;
 	private AnimatedSprite2D _sprite;
@@ -62,10 +62,14 @@ public partial class EnemyController : CharacterBody2D {
 	private float _attackCooldownTimer = 0.0f;
 	private bool _hasDroppedReward = false;
 
-	public EnemyState CurrentState => _currentState;
-	public int CurrentHealth => _currentHealth;
+	public virtual EnemyState CurrentState => _currentState;
+	public virtual int CurrentHealth => _currentHealth;
+	public virtual bool IsDead => _currentState == EnemyState.Dead || _currentHealth <= 0;
 
 	public override void _Ready() {
+		// Initialize health first so any registration sees the correct alive state
+		_currentHealth = MaxHealth;
+
 		if (!IsInGroup("enemy")) {
 			AddToGroup("enemy");
 		}
@@ -73,14 +77,10 @@ public partial class EnemyController : CharacterBody2D {
 			AddToGroup("enemies");
 		}
 
-		LevelController levelController = GetTree().GetFirstNodeInGroup("level_controller") as LevelController;
-		levelController?.RegisterEnemy(this);
-
 		_sprite = GetNodeOrNull<AnimatedSprite2D>("Visuals/AnimatedSprite2D");
 		_collisionShape = GetNodeOrNull<CollisionShape2D>("CollisionShape2D");
 		_healthBar = GetNodeOrNull<ProgressBar>(HealthBarPath);
 		_healthBarAnchor = GetNodeOrNull<CanvasItem>(HealthBarAnchorPath);
-		_currentHealth = MaxHealth;
 
 		if (_healthBar != null) {
 			_healthBar.MaxValue = MaxHealth;
@@ -93,6 +93,9 @@ public partial class EnemyController : CharacterBody2D {
 		}
 
 		EmitSignal(SignalName.HealthChanged, _currentHealth, MaxHealth);
+
+		LevelController levelController = GetTree().GetFirstNodeInGroup("level_controller") as LevelController;
+		levelController?.RegisterEnemy(this);
 
 		_player = GetTree().GetFirstNodeInGroup("player") as PlayerController
 			?? GetTree().GetFirstNodeInGroup("Player") as PlayerController;
@@ -208,7 +211,7 @@ public partial class EnemyController : CharacterBody2D {
 		}
 	}
 
-	public void TakeDamage(int damage) {
+	public virtual void TakeDamage(int damage) {
 		if (_currentState == EnemyState.Dead || damage <= 0) {
 			return;
 		}
@@ -240,6 +243,7 @@ public partial class EnemyController : CharacterBody2D {
 		}
 
 		_currentState = EnemyState.Dead;
+		_currentHealth = 0;
 		Velocity = Vector2.Zero;
 		EmitSignal(SignalName.EnemyDied);
 
