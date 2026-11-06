@@ -68,3 +68,10 @@ collision_mask = 0
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="DoorCollision" unique_id=88416932]
 shape = SubResource("RectangleShape2D_door")
+
+[node name="ExitArea" type="Area2D" parent="." unique_id=741029384]
+collision_layer = 0
+collision_mask = 2
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="ExitArea" unique_id=741029385]
+shape = SubResource("RectangleShape2D_door")
