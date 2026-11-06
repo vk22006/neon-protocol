@@ -825,6 +825,7 @@ position = Vector2(447, 143)
 script = ExtResource("40_lvlctl")
 DoorPath = NodePath("../../Environment/Door")
 EnemyPath = NodePath("../../Actors/Enemy")
+NextLevelPath = "res://Scenes/Levels/Level_2.tscn"
 
 [node name="UI" type="CanvasLayer" parent="." unique_id=220098163]
 
