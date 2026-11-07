@@ -3,8 +3,11 @@
 [ext_resource type="Texture2D" uid="uid://bfbhnt61cvaiq" path="res://Assets/interior/floors/Room_Builder_free_16x16.png" id="1_g3dse"]
 [ext_resource type="Texture2D" uid="uid://6cckh20n3b7e" path="res://Assets/props/Interiors_free_16x16.png" id="2_wj8f0"]
 [ext_resource type="Texture2D" uid="uid://bhe2trtuabgld" path="res://Assets/props/Interiors_free_32x32.png" id="3_8ho8o"]
+[ext_resource type="Texture2D" uid="uid://drh5rjv4hbj82" path="res://Assets/Gaudium_Flag.png" id="4_3sfgf"]
 [ext_resource type="Texture2D" uid="uid://4c2oe6w8ow0q" path="res://Assets/characters/crew-lab-coat.png" id="4_8ho8o"]
 [ext_resource type="Texture2D" uid="uid://cb6k6lptqw2kw" path="res://Assets/characters/crew-slate.png" id="5_3sfgf"]
+[ext_resource type="Script" uid="uid://cpnrjttfblucf" path="res://Scripts/intro_cutscene.gd" id="7_6p1w2"]
+[ext_resource type="PackedScene" uid="uid://tddhvql1gvxt" path="res://Assets/dialogues/dialogue.tscn" id="7_smjx0"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_3sfgf"]
 texture = ExtResource("1_g3dse")
@@ -4954,9 +4957,15 @@ texture = ExtResource("3_8ho8o")
 30:176/0 = 0
 31:176/0 = 0
 
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_4ci3p"]
+texture = ExtResource("4_3sfgf")
+0:0/0 = 0
+0:1/0 = 0
+
 [sub_resource type="TileSet" id="TileSet_hk3oa"]
 sources/0 = SubResource("TileSetAtlasSource_smjx0")
 sources/1 = SubResource("TileSetAtlasSource_6p1w2")
+sources/3 = SubResource("TileSetAtlasSource_4ci3p")
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_smjx0"]
 atlas = ExtResource("4_8ho8o")
@@ -5042,7 +5051,7 @@ animations = [{
 }],
 "loop": 1,
 "name": &"idle_right",
-"speed": 5.0
+"speed": 2.0
 }, {
 "frames": [{
 "duration": 1.0,
@@ -5163,7 +5172,7 @@ animations = [{
 }],
 "loop": 1,
 "name": &"idle_left",
-"speed": 5.0
+"speed": 2.0
 }, {
 "frames": [{
 "duration": 1.0,
@@ -5200,7 +5209,230 @@ animations = [{
 "speed": 5.0
 }]
 
+[sub_resource type="Animation" id="Animation_smjx0"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Camera2D:zoom")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector2(1, 1)]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Camera2D:position")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector2(288, 182)]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("Node2D/Scientist:position")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector2(232, 286)]
+}
+tracks/3/type = "value"
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/path = NodePath("Node2D/Scientist:animation")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [&"walk_up"]
+}
+tracks/4/type = "value"
+tracks/4/imported = false
+tracks/4/enabled = true
+tracks/4/path = NodePath("Node2D/GovernmentOfficial:animation")
+tracks/4/interp = 1
+tracks/4/loop_wrap = true
+tracks/4/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [&"idle_left"]
+}
+tracks/5/type = "value"
+tracks/5/imported = false
+tracks/5/enabled = true
+tracks/5/path = NodePath("Node2D/GovernmentOfficial2:animation")
+tracks/5/interp = 1
+tracks/5/loop_wrap = true
+tracks/5/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [&"idle_left"]
+}
+tracks/6/type = "value"
+tracks/6/imported = false
+tracks/6/enabled = true
+tracks/6/path = NodePath("Node2D/GovernmentOfficial3:animation")
+tracks/6/interp = 1
+tracks/6/loop_wrap = true
+tracks/6/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [&"idle_left"]
+}
+tracks/7/type = "value"
+tracks/7/imported = false
+tracks/7/enabled = true
+tracks/7/path = NodePath("Node2D/Scientist:visible")
+tracks/7/interp = 1
+tracks/7/loop_wrap = true
+tracks/7/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [false]
+}
+
+[sub_resource type="Animation" id="Animation_3sfgf"]
+resource_name = "intro_opening"
+length = 7.0
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Camera2D:zoom")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 5),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Vector2(1, 1), Vector2(1.2, 1.2)]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Camera2D:position")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0, 5),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Vector2(288, 182), Vector2(288, 230)]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("Node2D/Scientist:visible")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0, 7),
+"transitions": PackedFloat32Array(1, 1),
+"update": 1,
+"values": [false, false]
+}
+
+[sub_resource type="Animation" id="Animation_6p1w2"]
+resource_name = "scientist_arrival"
+length = 4.0
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Node2D/Scientist:position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 3),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Vector2(232, 286), Vector2(232, 192)]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Node2D/Scientist:animation")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0, 3),
+"transitions": PackedFloat32Array(1, 1),
+"update": 1,
+"values": [&"walk_up", &"idle_right"]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("Node2D/GovernmentOfficial:animation")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0, 4),
+"transitions": PackedFloat32Array(1, 1),
+"update": 1,
+"values": [&"idle_left", &"idle_left"]
+}
+tracks/3/type = "value"
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/path = NodePath("Node2D/GovernmentOfficial2:animation")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/keys = {
+"times": PackedFloat32Array(0, 4),
+"transitions": PackedFloat32Array(1, 1),
+"update": 1,
+"values": [&"idle_left", &"idle_left"]
+}
+tracks/4/type = "value"
+tracks/4/imported = false
+tracks/4/enabled = true
+tracks/4/path = NodePath("Node2D/GovernmentOfficial3:animation")
+tracks/4/interp = 1
+tracks/4/loop_wrap = true
+tracks/4/keys = {
+"times": PackedFloat32Array(0, 4),
+"transitions": PackedFloat32Array(1, 1),
+"update": 1,
+"values": [&"idle_left", &"idle_left"]
+}
+tracks/5/type = "value"
+tracks/5/imported = false
+tracks/5/enabled = true
+tracks/5/path = NodePath("Node2D/Scientist:visible")
+tracks/5/interp = 1
+tracks/5/loop_wrap = true
+tracks/5/keys = {
+"times": PackedFloat32Array(0, 4),
+"transitions": PackedFloat32Array(1, 1),
+"update": 1,
+"values": [true, true]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_smjx0"]
+_data = {
+&"RESET": SubResource("Animation_smjx0"),
+&"intro_opening": SubResource("Animation_3sfgf"),
+&"scientist_arrival": SubResource("Animation_6p1w2")
+}
+
 [node name="IntroCutScene" type="Node2D" unique_id=1709349068]
+script = ExtResource("7_6p1w2")
 
 [node name="Environment" type="Node2D" parent="." unique_id=82737116]
 
@@ -5209,33 +5441,49 @@ tile_map_data = PackedByteArray("AAAKAAMAAAAHAA0AAAAKAAQAAAAHAA4AAAALAAMAAAAIAA0
 tile_set = SubResource("TileSet_oaf1h")
 
 [node name="Props" type="TileMapLayer" parent="Environment" unique_id=1918423173]
-tile_map_data = PackedByteArray("AAAPAAgAAAAAAAUAAAAPAAkAAAAAAAYAAAATAAgAAAACAAUAAAATAAkAAAACAAYAAAAQAAgAAAABAAUAAAAQAAkAAAABAAYAAAARAAgAAAABAAUAAAARAAkAAAABAAYAAAASAAgAAAABAAUAAAASAAkAAAABAAYAAAAPAAoAAAAAAAcAAAAPAAsAAAAAAAcAAAAPAAwAAAAAAAcAAAAPAA0AAAAAAAcAAAAPAA4AAAAAAAcAAAAPAA8AAAAAAAgAAAATAA8AAAACAAgAAAAPABAAAAAAAAkAAAATABAAAAACAAkAAAAQAA8AAAABAAgAAAAQABAAAAABAAkAAAARAA8AAAABAAgAAAARABAAAAABAAkAAAASAA8AAAABAAgAAAASABAAAAABAAkAAAATAA4AAAACAAcAAAATAA0AAAACAAcAAAATAAwAAAACAAcAAAATAAsAAAACAAcAAAATAAoAAAACAAcAAAAPAAQAAQAUAIUAAAAPAAUAAQAUAIYAAAAPAAYAAQAUAIcAAAAQAAQAAQAVAIUAAAAQAAUAAQAVAIYAAAAQAAYAAQAVAIcAAAARAAQAAQAWAIUAAAARAAUAAQAWAIYAAAARAAYAAQAWAIcAAAASAAQAAQAXAIUAAAASAAUAAQAXAIYAAAASAAYAAQAXAIcAAAAKAAQAAAAKAC0AAAAKAAUAAAAKAC4AAAALAAQAAAALAC0AAAALAAUAAAALAC4AAAAXAAQAAAAKAC0AAAAXAAUAAAAKAC4AAAAYAAQAAAALAC0AAAAYAAUAAAALAC4AAAAKAAMAAAAKACwAAAALAAMAAAALACwAAAAXAAMAAAAKACwAAAAYAAMAAAALACwAAAAVAAQAAAAAACkAAAAWAAQAAAABACkAAAAXAA4AAAAHAEwAAAAXAA8AAAAHAE0AAAAXABAAAAAHAE8AAAAYAA4AAAAIAEwAAAAYAA8AAAAIAE0AAAAYABAAAAAIAE8AAAAXABEAAAAHAE0AAAAYABEAAAAIAE0AAAAXABIAAAAHAE4AAAAYABIAAAAIAE4AAAAXAAsAAAAHAEwAAAAXAAwAAAAHAE0AAAAXAA0AAAAHAE4AAAAYAAsAAAAIAEwAAAAYAAwAAAAIAE0AAAAYAA0AAAAIAE4AAAAKAAYAAAANAFYAAAAKAAcAAAANAFYAAAAKAAgAAAANAFYAAAAKAAkAAAANAFYAAAAKAAoAAAANAFcAAAANAAoAAAAGABYAAAANAAsAAAAGABUAAAANAAwAAAAGABYAAAANAA0AAAAGABUAAAANAA4AAAAGABYAAAANAAkAAAAGABUAAAAVAA0AAAAHABUAAAAVAA4AAAAHABYAAAAVAAsAAAAHABUAAAAVAAwAAAAHABYAAAAVAAkAAAAHABUAAAAVAAoAAAAHABYAAAA=")
+tile_map_data = PackedByteArray("AAAPAAgAAAAAAAUAAAAPAAkAAAAAAAYAAAATAAgAAAACAAUAAAATAAkAAAACAAYAAAAQAAgAAAABAAUAAAAQAAkAAAABAAYAAAARAAgAAAABAAUAAAARAAkAAAABAAYAAAASAAgAAAABAAUAAAASAAkAAAABAAYAAAAPAAoAAAAAAAcAAAAPAAsAAAAAAAcAAAAPAAwAAAAAAAcAAAAPAA0AAAAAAAcAAAAPAA4AAAAAAAcAAAAPAA8AAAAAAAgAAAATAA8AAAACAAgAAAAPABAAAAAAAAkAAAATABAAAAACAAkAAAAQAA8AAAABAAgAAAAQABAAAAABAAkAAAARAA8AAAABAAgAAAARABAAAAABAAkAAAASAA8AAAABAAgAAAASABAAAAABAAkAAAATAA4AAAACAAcAAAATAA0AAAACAAcAAAATAAwAAAACAAcAAAATAAsAAAACAAcAAAATAAoAAAACAAcAAAAQAAQAAQAUAIUAAAAQAAUAAQAUAIYAAAAQAAYAAQAUAIcAAAARAAQAAQAWAIUAAAARAAUAAQAWAIYAAAARAAYAAQAWAIcAAAASAAQAAQAXAIUAAAASAAUAAQAXAIYAAAASAAYAAQAXAIcAAAAKAAQAAAAKAC0AAAAKAAUAAAAKAC4AAAALAAQAAAALAC0AAAALAAUAAAALAC4AAAAXAAQAAAAKAC0AAAAXAAUAAAAKAC4AAAAYAAQAAAALAC0AAAAYAAUAAAALAC4AAAAKAAMAAAAKACwAAAALAAMAAAALACwAAAAXAAMAAAAKACwAAAAYAAMAAAALACwAAAAVAAQAAAAAACkAAAAWAAQAAAABACkAAAAXAA4AAAAHAEwAAAAXAA8AAAAHAE0AAAAXABAAAAAHAE8AAAAYAA4AAAAIAEwAAAAYAA8AAAAIAE0AAAAYABAAAAAIAE8AAAAXABEAAAAHAE0AAAAYABEAAAAIAE0AAAAXABIAAAAHAE4AAAAYABIAAAAIAE4AAAAXAAsAAAAHAEwAAAAXAAwAAAAHAE0AAAAXAA0AAAAHAE4AAAAYAAsAAAAIAEwAAAAYAAwAAAAIAE0AAAAYAA0AAAAIAE4AAAAKAAYAAAANAFYAAAAKAAcAAAANAFYAAAAKAAgAAAANAFYAAAAKAAkAAAANAFYAAAAKAAoAAAANAFcAAAANAAoAAAAGABYAAAANAAsAAAAGABUAAAANAAwAAAAGABYAAAANAA0AAAAGABUAAAANAA4AAAAGABYAAAANAAkAAAAGABUAAAAVAA0AAAAHABUAAAAVAA4AAAAHABYAAAAVAAsAAAAHABUAAAAVAAwAAAAHABYAAAAVAAkAAAAHABUAAAAVAAoAAAAHABYAAAAOAAQAAwAAAAAAAAAOAAUAAwAAAAEAAAAUAAQAAwAAAAAAAAAUAAUAAwAAAAEAAAA=")
 tile_set = SubResource("TileSet_hk3oa")
 
 [node name="Node2D" type="Node2D" parent="." unique_id=59802575]
 
 [node name="Scientist" type="AnimatedSprite2D" parent="Node2D" unique_id=109192914]
+visible = false
 texture_filter = 1
-position = Vector2(232, 190)
+position = Vector2(232, 286)
 sprite_frames = SubResource("SpriteFrames_oaf1h")
-animation = &"idle_right"
+animation = &"walk_up"
+autoplay = "walk_up"
 
 [node name="GovernmentOfficial" type="AnimatedSprite2D" parent="Node2D" unique_id=401950723]
 texture_filter = 1
 position = Vector2(330, 171)
 sprite_frames = SubResource("SpriteFrames_hk3oa")
 animation = &"idle_left"
+autoplay = "idle_left"
+frame_progress = 0.062594905
 
 [node name="GovernmentOfficial2" type="AnimatedSprite2D" parent="Node2D" unique_id=1695325322]
 texture_filter = 1
 position = Vector2(330, 189)
 sprite_frames = SubResource("SpriteFrames_hk3oa")
 animation = &"idle_left"
+autoplay = "idle_left"
+frame_progress = 0.73692685
 
 [node name="GovernmentOfficial3" type="AnimatedSprite2D" parent="Node2D" unique_id=1646694061]
 texture_filter = 1
 position = Vector2(329, 211)
 sprite_frames = SubResource("SpriteFrames_hk3oa")
 animation = &"idle_left"
+autoplay = "idle_left"
+frame_progress = 0.125839
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="." unique_id=1574208326]
+libraries/ = SubResource("AnimationLibrary_smjx0")
+
+[node name="Camera2D" type="Camera2D" parent="." unique_id=515308576]
+position = Vector2(288, 182)
+
+[node name="DialogueBox" parent="." unique_id=1245189681 instance=ExtResource("7_smjx0")]
+visible = false
+position = Vector2(2, -5)
