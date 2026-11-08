@@ -61,6 +61,7 @@ public partial class EnemyController : CharacterBody2D {
 	private float _attackTimer = 0.0f;
 	private float _attackCooldownTimer = 0.0f;
 	private bool _hasDroppedReward = false;
+	private bool _aiEnabled = false;
 
 	public virtual EnemyState CurrentState => _currentState;
 	public virtual int CurrentHealth => _currentHealth;
@@ -130,6 +131,11 @@ public partial class EnemyController : CharacterBody2D {
 			return;
 		}
 
+		if (!_aiEnabled) {
+			Velocity = Vector2.Zero;
+			return;
+		}
+
 		if (_currentState == EnemyState.Hurt) {
 			Velocity = Vector2.Zero;
 			MoveAndSlide();
@@ -189,6 +195,19 @@ public partial class EnemyController : CharacterBody2D {
 		}
 	}
 
+	public void SetAIEnabled(bool enabled) {
+		_aiEnabled = enabled;
+
+		if (!enabled) {
+			Velocity = Vector2.Zero;
+
+			if (_currentState != EnemyState.Dead &&
+				_currentState != EnemyState.Hurt) {
+				_currentState = EnemyState.Chasing;
+				UpdateAnimation("idle", _lastDirection);
+			}
+		}
+	}
 	private void StartAttack() {
 		_currentState = EnemyState.Attacking;
 		_attackDamageApplied = false;
