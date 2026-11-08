@@ -10,6 +10,9 @@ public partial class SceneTransition : CanvasLayer {
 	public delegate void FadeOutCompletedEventHandler();
 
 	[Signal]
+	public delegate void FadeInCompletedEventHandler();
+
+	[Signal]
 	public delegate void NewSceneLoadedEventHandler(string targetScene);
 
 	[Signal]
@@ -132,7 +135,7 @@ public partial class SceneTransition : CanvasLayer {
 		}
 
 		// 2. Fade the screen to black
-		await PlayFadeToBlack();
+		await PlayFadeToBlackAsync();
 
 		// Ensure overlay is pitch black before scene swap
 		if (_colorRect != null) {
@@ -158,7 +161,7 @@ public partial class SceneTransition : CanvasLayer {
 		EmitSignal(SignalName.NewSceneLoaded, targetScenePath);
 
 		// 5. Fade from black back to the gameplay scene
-		await PlayFadeFromBlack();
+		await PlayFadeFromBlackAsync();
 
 		// 6. Restore normal player input and gameplay
 		if (_colorRect != null) {
@@ -170,11 +173,72 @@ public partial class SceneTransition : CanvasLayer {
 		EnableCurrentPlayerInput();
 
 		_isTransitioning = false;
+		EmitSignal(SignalName.FadeInCompleted);
 		EmitSignal(SignalName.TransitionFinished);
 		GD.Print($"[SceneTransition] Transition to '{targetScenePath}' finished successfully.");
 	}
 
-	private async Task PlayFadeToBlack() {
+	public Signal FadeToBlack() {
+		_ = FadeToBlackInternal();
+		return new Signal(this, SignalName.FadeOutCompleted);
+	}
+
+	public Signal PlayFadeToBlack() {
+		return FadeToBlack();
+	}
+
+	public Signal FadeFromBlack() {
+		_ = FadeFromBlackInternal();
+		return new Signal(this, SignalName.FadeInCompleted);
+	}
+
+	public Signal PlayFadeFromBlack() {
+		return FadeFromBlack();
+	}
+
+	private async Task FadeToBlackInternal() {
+		if (_isTransitioning) {
+			return;
+		}
+
+		_isTransitioning = true;
+		DisableCurrentPlayerInput();
+
+		if (_colorRect != null) {
+			_colorRect.Visible = true;
+			_colorRect.MouseFilter = Control.MouseFilterEnum.Stop;
+		}
+
+		await PlayFadeToBlackAsync();
+
+		if (_colorRect != null) {
+			_colorRect.Color = new Color(0, 0, 0, 1);
+		}
+
+		EmitSignal(SignalName.FadeOutCompleted);
+	}
+
+	private async Task FadeFromBlackInternal() {
+		await PlayFadeFromBlackAsync();
+
+		if (_colorRect != null) {
+			_colorRect.Color = new Color(0, 0, 0, 0);
+			_colorRect.Visible = false;
+			_colorRect.MouseFilter = Control.MouseFilterEnum.Ignore;
+		}
+
+		EnableCurrentPlayerInput();
+		_isTransitioning = false;
+
+		EmitSignal(SignalName.FadeInCompleted);
+		EmitSignal(SignalName.TransitionFinished);
+	}
+
+	public async Task PlayFadeToBlackAsync() {
+		if (_colorRect != null) {
+			_colorRect.Visible = true;
+		}
+
 		if (_animPlayer != null && _animPlayer.HasAnimation("fade_to_black")) {
 			_animPlayer.Play("fade_to_black");
 			await ToSignal(_animPlayer, AnimationMixer.SignalName.AnimationFinished);
@@ -185,7 +249,7 @@ public partial class SceneTransition : CanvasLayer {
 		}
 	}
 
-	private async Task PlayFadeFromBlack() {
+	public async Task PlayFadeFromBlackAsync() {
 		if (_animPlayer != null && _animPlayer.HasAnimation("fade_from_black")) {
 			_animPlayer.Play("fade_from_black");
 			await ToSignal(_animPlayer, AnimationMixer.SignalName.AnimationFinished);
