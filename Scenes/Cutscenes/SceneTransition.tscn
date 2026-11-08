@@ -1,6 +1,6 @@
 [gd_scene format=3 uid="uid://cpa68dylky4q3"]
 
-[ext_resource type="Script" path="res://Scripts/SceneTransition.cs" id="1_transition"]
+[ext_resource type="Script" uid="uid://cl83miyweu4bg" path="res://Scripts/SceneTransition.cs" id="1_transition"]
 
 [sub_resource type="Animation" id="Animation_reset"]
 length = 0.001
@@ -17,22 +17,6 @@ tracks/0/keys = {
 "values": [Color(0, 0, 0, 0)]
 }
 
-[sub_resource type="Animation" id="Animation_fade_to_black"]
-resource_name = "fade_to_black"
-length = 0.4
-tracks/0/type = "value"
-tracks/0/imported = false
-tracks/0/enabled = true
-tracks/0/path = NodePath("ColorRect:color")
-tracks/0/interp = 1
-tracks/0/loop_wrap = true
-tracks/0/keys = {
-"times": PackedFloat32Array(0, 0.4),
-"transitions": PackedFloat32Array(1, 1),
-"update": 0,
-"values": [Color(0, 0, 0, 0), Color(0, 0, 0, 1)]
-}
-
 [sub_resource type="Animation" id="Animation_fade_from_black"]
 resource_name = "fade_from_black"
 length = 0.4
@@ -47,6 +31,22 @@ tracks/0/keys = {
 "transitions": PackedFloat32Array(1, 1),
 "update": 0,
 "values": [Color(0, 0, 0, 1), Color(0, 0, 0, 0)]
+}
+
+[sub_resource type="Animation" id="Animation_fade_to_black"]
+resource_name = "fade_to_black"
+length = 0.4
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("ColorRect:color")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.4),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Color(0, 0, 0, 0), Color(0, 0, 0, 1)]
 }
 
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_fade"]
@@ -71,6 +71,4 @@ mouse_filter = 2
 color = Color(0, 0, 0, 0)
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="." unique_id=991827366]
-libraries = {
-&"": SubResource("AnimationLibrary_fade")
-}
+libraries/ = SubResource("AnimationLibrary_fade")
