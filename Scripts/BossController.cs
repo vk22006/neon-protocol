@@ -492,4 +492,3 @@ public partial class BossController : EnemyController {
 		GD.Print($"[BossController] Boss defeated: spawned {BossLootCount} crystal collectibles around {GlobalPosition}.");
 	}
 }
-
