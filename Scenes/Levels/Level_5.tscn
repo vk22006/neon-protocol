@@ -2114,3 +2114,5 @@ theme_override_colors/font_shadow_color = Color(0, 0, 0, 0.9)
 theme_override_font_sizes/font_size = 12
 text = "SYSTEM COMPROMISED"
 horizontal_alignment = 1
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="." unique_id=1476055774]
