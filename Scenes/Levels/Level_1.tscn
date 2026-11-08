@@ -1,5 +1,6 @@
 [gd_scene format=4 uid="uid://bsijr0qe0j32x"]
 
+[ext_resource type="Script" uid="uid://b3gncn1yalgho" path="res://Scripts/level_1_controller.gd" id="1_7wvx7"]
 [ext_resource type="Texture2D" uid="uid://celkhenhoib6i" path="res://Assets/interior/floors/floor-steel.png" id="1_jjgbg"]
 [ext_resource type="Texture2D" uid="uid://bvmxt8cj2kxue" path="res://Assets/interior/floors/floor-carpet-beige.png" id="2_hibaj"]
 [ext_resource type="Texture2D" uid="uid://ctjjxu3aj7xlo" path="res://Assets/interior/floors/floor-steel-plain.png" id="3_pdsj5"]
@@ -37,10 +38,11 @@
 [ext_resource type="PackedScene" uid="uid://bk6gs86yscsl4" path="res://Scenes/Door.tscn" id="34_hdf80"]
 [ext_resource type="PackedScene" uid="uid://b1cmh17oio80y" path="res://Scenes/Enemy.tscn" id="35_r33sp"]
 [ext_resource type="Script" uid="uid://hud7385a202a" path="res://Scripts/HUD.cs" id="36_hud01"]
-[ext_resource type="Theme" path="res://addons/pixel_ui_scifi/themes/cyan.tres" id="37_theme_cyan"]
+[ext_resource type="Theme" uid="uid://b4po10m7x2tj6" path="res://addons/pixel_ui_scifi/themes/cyan.tres" id="37_theme_cyan"]
 [ext_resource type="Texture2D" uid="uid://brbs2uk2xgnda" path="res://addons/pixel_ui_scifi/icons/heart.png" id="38_icon_heart"]
 [ext_resource type="Texture2D" uid="uid://c3dy1fpytxeyq" path="res://addons/crystal-ui.png" id="39_crystal_ui"]
-[ext_resource type="Script" uid="uid://lvlctl928374" path="res://Scripts/LevelController.cs" id="40_lvlctl"]
+[ext_resource type="Script" uid="uid://chy6tg8ah3x8h" path="res://Scripts/LevelController.cs" id="40_lvlctl"]
+[ext_resource type="PackedScene" uid="uid://tddhvql1gvxt" path="res://Assets/dialogues/dialogue.tscn" id="42_ct7l4"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_bo1nx"]
 texture = ExtResource("1_jjgbg")
@@ -788,6 +790,7 @@ physics_layer_0/collision_mask = 0
 sources/0 = SubResource("TileSetAtlasSource_r33sp")
 
 [node name="NeonArena" type="Node2D" unique_id=1749471234]
+script = ExtResource("1_7wvx7")
 
 [node name="Environment" type="Node2D" parent="." unique_id=768279529]
 
@@ -927,3 +930,8 @@ theme_override_colors/font_shadow_color = Color(0, 0, 0, 0.9)
 theme_override_font_sizes/font_size = 12
 text = "SYSTEM COMPROMISED"
 horizontal_alignment = 1
+
+[node name="DialogueBox" parent="." unique_id=1245189681 instance=ExtResource("42_ct7l4")]
+visible = false
+position = Vector2(39.999996, 83)
+scale = Vector2(0.38, 0.38)
