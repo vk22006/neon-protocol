@@ -11,7 +11,7 @@ config_version=5
 [application]
 
 config/name="Neon Protocol"
-run/main_scene="uid://bsijr0qe0j32x"
+run/main_scene="uid://djxiju1njgpeg"
 config/features=PackedStringArray("4.7", "C#", "Forward Plus")
 config/icon="res://icon.svg"
 
