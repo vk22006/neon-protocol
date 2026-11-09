@@ -66,6 +66,7 @@ public partial class EnemyController : CharacterBody2D {
 	public virtual EnemyState CurrentState => _currentState;
 	public virtual int CurrentHealth => _currentHealth;
 	public virtual bool IsDead => _currentState == EnemyState.Dead || _currentHealth <= 0;
+	public bool AIEnabled => _aiEnabled;
 
 	public override void _Ready() {
 		// Initialize health first so any registration sees the correct alive state
@@ -195,7 +196,7 @@ public partial class EnemyController : CharacterBody2D {
 		}
 	}
 
-	public void SetAIEnabled(bool enabled) {
+	public virtual void SetAIEnabled(bool enabled) {
 		_aiEnabled = enabled;
 
 		if (!enabled) {
