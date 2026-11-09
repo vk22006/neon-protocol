@@ -1,0 +1,52 @@
+[gd_scene format=3 uid="uid://7whw5bmo4sch"]
+
+[ext_resource type="Theme" uid="uid://b4po10m7x2tj6" path="res://addons/pixel_ui_scifi/themes/cyan.tres" id="1_70qgc"]
+[ext_resource type="Script" uid="uid://cnb2y7apmk7oh" path="res://Scripts/Intro_message.gd" id="2_vspfw"]
+
+[node name="EndingMessage" type="Control" unique_id=987123456]
+texture_filter = 1
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource("1_70qgc")
+script = ExtResource("2_vspfw")
+
+[node name="Background" type="ColorRect" parent="." unique_id=987123457]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.04, 0.06, 0.09, 1)
+
+[node name="CenterContainer" type="CenterContainer" parent="." unique_id=987123458]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="CenterContainer" unique_id=987123459]
+layout_mode = 2
+theme_override_constants/separation = 8
+alignment = 1
+
+[node name="SubtitleLabel" type="Label" parent="CenterContainer/VBoxContainer" unique_id=987123461]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.7, 0.85, 0.95, 1)
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 0.9)
+theme_override_font_sizes/font_size = 12
+text = "The Department of Defense and the Department of Research &
+Progress of The Empire of Gaudium summoned one of their top 
+scientists, Gary Thomson, for a classified meeting.
+
+
+The government needed a highly experienced operative for a 
+covert mission to secure their research laboratory, which had 
+been overrun by cyber entities from Kepler, an 
+extraterrestrial nation."
