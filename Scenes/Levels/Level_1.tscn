@@ -826,6 +826,7 @@ position = Vector2(447, 143)
 
 [node name="LevelController" type="Node" parent="Gameplay" unique_id=182736450]
 script = ExtResource("40_lvlctl")
+AutoEnableGameplay = false
 DoorPath = NodePath("../../Environment/Door")
 EnemyPath = NodePath("../../Actors/Enemy")
 NextLevelPath = "res://Scenes/Levels/Level_2.tscn"
