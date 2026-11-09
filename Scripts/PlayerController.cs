@@ -116,6 +116,11 @@ public partial class PlayerController : CharacterBody2D {
 		if (SceneTransition.IsTransitioning) {
 			SetInputEnabled(false);
 		}
+
+		LevelController levelController = GetTree()?.GetFirstNodeInGroup("level_controller") as LevelController;
+		if (levelController != null && !levelController.IsGameplayEnabled) {
+			SetInputEnabled(false);
+		}
 	}
 
 	public override void _PhysicsProcess(double delta) {
