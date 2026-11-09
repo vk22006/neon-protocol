@@ -24,6 +24,13 @@ public partial class LevelController : Node {
 	[Signal]
 	public delegate void RunResetEventHandler();
 
+	[Signal]
+	public delegate void GameplayStateChangedEventHandler(bool enabled);
+
+	[ExportGroup("Gameplay State")]
+	[Export]
+	public bool AutoEnableGameplay { get; set; } = true;
+
 	[ExportGroup("Level References")]
 	[Export]
 	public NodePath DoorPath { get; set; }
@@ -63,6 +70,8 @@ public partial class LevelController : Node {
 	private bool _levelCompleted = false;
 	private bool _isTransitioning = false;
 	private bool _isRestarting = false;
+	private bool _isGameplayEnabled = true;
+	private bool _gameplayExplicitlyControlled = false;
 	private SceneTreeTimer _restartTimer;
 
 	public int TotalEnemies => _registeredEnemies.Count;
@@ -73,6 +82,7 @@ public partial class LevelController : Node {
 	public bool IsLevelCompleted => _levelCompleted;
 	public bool IsTransitioning => _isTransitioning;
 	public bool IsRestarting => _isRestarting;
+	public bool IsGameplayEnabled => _isGameplayEnabled;
 
 	public IReadOnlyCollection<EnemyController> LivingEnemies => _livingEnemies;
 	public IReadOnlyCollection<EnemyController> RegisteredEnemies => _registeredEnemies;
@@ -91,6 +101,8 @@ public partial class LevelController : Node {
 		_isRestarting = false;
 		_doorConnected = false;
 		_playerConnected = false;
+		_gameplayExplicitlyControlled = false;
+		_isGameplayEnabled = AutoEnableGameplay;
 
 		ResolveReferences();
 
@@ -183,6 +195,25 @@ public partial class LevelController : Node {
 		}
 	}
 
+	public void SetGameplayEnabled(bool enabled) {
+		_isGameplayEnabled = enabled;
+		_gameplayExplicitlyControlled = true;
+
+		ResolvePlayer();
+		if (_player != null && GodotObject.IsInstanceValid(_player)) {
+			_player.SetInputEnabled(enabled);
+		}
+
+		foreach (EnemyController enemy in _livingEnemies) {
+			if (enemy != null && GodotObject.IsInstanceValid(enemy)) {
+				enemy.SetAIEnabled(enabled);
+			}
+		}
+
+		EmitSignal(SignalName.GameplayStateChanged, enabled);
+		GD.Print($"[LevelController] SetGameplayEnabled({enabled}). Player input: {enabled}, Living enemies updated: {_livingEnemies.Count}");
+	}
+
 	public void RegisterEnemy(EnemyController enemy) {
 		if (enemy == null || !GodotObject.IsInstanceValid(enemy)) {
 			return;
@@ -201,9 +232,12 @@ public partial class LevelController : Node {
 			enemy.EnemyDefeated += () => HandleEnemyDefeated(enemy);
 			enemy.EnemyDied += () => HandleEnemyDefeated(enemy);
 			enemy.TreeExited += () => OnEnemyTreeExited(enemy);
+
+			// Inherit the current gameplay state
+			enemy.SetAIEnabled(_isGameplayEnabled);
 		}
 
-		GD.Print($"[LevelController] Registered enemy '{enemy.Name}' (Type: {enemy.GetType().Name}, Health: {enemy.CurrentHealth}, Dead: {enemy.IsDead}). Living count: {_livingEnemies.Count}");
+		GD.Print($"[LevelController] Registered enemy '{enemy.Name}' (Type: {enemy.GetType().Name}, Health: {enemy.CurrentHealth}, Dead: {enemy.IsDead}, AIEnabled: {_isGameplayEnabled}). Living count: {_livingEnemies.Count}");
 
 		EmitSignal(SignalName.EnemyRegistered, enemy);
 		EmitSignal(SignalName.EnemyCountChanged, _livingEnemies.Count, _registeredEnemies.Count);
@@ -222,6 +256,11 @@ public partial class LevelController : Node {
 		_initialRegistrationComplete = true;
 
 		GD.Print($"[LevelController] Initial enemy registration finalized: {_livingEnemies.Count} living, {_registeredEnemies.Count} total registered.");
+
+		// Apply initial gameplay state if not explicitly controlled by a cutscene controller
+		if (!_gameplayExplicitlyControlled && AutoEnableGameplay) {
+			SetGameplayEnabled(true);
+		}
 
 		// Verify door is closed
 		if (_door != null && !_doorTriggered) {
@@ -333,6 +372,7 @@ public partial class LevelController : Node {
 		}
 
 		_isTransitioning = true;
+		SetGameplayEnabled(false);
 
 		if (player != null && GodotObject.IsInstanceValid(player)) {
 			PreservedCrystalCount = player.CrystalCount;
@@ -344,7 +384,10 @@ public partial class LevelController : Node {
 		GD.Print($"[LevelController] Transitioning to next level: '{nextScene}'. Preserved crystals: {PreservedCrystalCount}");
 
 		EmitSignal(SignalName.LevelTransitionStarted, nextScene);
-		SceneTransition.ChangeScene(GetTree(), nextScene);
+
+		// If transitioning to Level 5, Level 5 will call FadeFromBlack when initialized and ready for boss intro
+		bool autoFadeIn = !nextScene.Contains("Level_5");
+		SceneTransition.ChangeScene(GetTree(), nextScene, autoFadeIn);
 	}
 
 	public string GetNextLevelScenePath() {
