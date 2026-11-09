@@ -1,5 +1,6 @@
 [gd_scene format=4 uid="uid://be75tiye474ua"]
 
+[ext_resource type="Script" uid="uid://iyadpmfoo22g" path="res://Scripts/level_5_controller.gd" id="1_52ghl"]
 [ext_resource type="Texture2D" uid="uid://celkhenhoib6i" path="res://Assets/interior/floors/floor-steel.png" id="1_t48kg"]
 [ext_resource type="Texture2D" uid="uid://bvmxt8cj2kxue" path="res://Assets/interior/floors/floor-carpet-beige.png" id="2_52ghl"]
 [ext_resource type="Texture2D" uid="uid://ctjjxu3aj7xlo" path="res://Assets/interior/floors/floor-steel-plain.png" id="3_c6nwv"]
@@ -42,6 +43,7 @@
 [ext_resource type="Texture2D" uid="uid://brbs2uk2xgnda" path="res://addons/pixel_ui_scifi/icons/heart.png" id="41_x607a"]
 [ext_resource type="Texture2D" uid="uid://c3dy1fpytxeyq" path="res://addons/crystal-ui.png" id="42_ywgya"]
 [ext_resource type="PackedScene" uid="uid://bflibc5xnqwvr" path="res://Scenes/Boss.tscn" id="43_boss"]
+[ext_resource type="PackedScene" uid="uid://tddhvql1gvxt" path="res://Assets/dialogues/dialogue.tscn" id="44_c6nwv"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_bo1nx"]
 texture = ExtResource("1_t48kg")
@@ -1975,7 +1977,237 @@ physics_layer_0/collision_mask = 0
 sources/0 = SubResource("TileSetAtlasSource_r33sp")
 sources/16 = SubResource("TileSetAtlasSource_ux54q")
 
+[sub_resource type="Animation" id="Animation_0i6hh"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Actors/Player:position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector2(423, 512)]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("CinematicCamera:position")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector2(420, 261)]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("CinematicCamera:zoom")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector2(1, 1)]
+}
+tracks/3/type = "value"
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/path = NodePath("Actors/Boss:visible")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [false]
+}
+tracks/4/type = "value"
+tracks/4/imported = false
+tracks/4/enabled = true
+tracks/4/path = NodePath("Actors/Boss:position")
+tracks/4/interp = 1
+tracks/4/loop_wrap = true
+tracks/4/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector2(423, 171)]
+}
+tracks/5/type = "value"
+tracks/5/imported = false
+tracks/5/enabled = true
+tracks/5/path = NodePath("Actors/Player/Visuals/AnimatedSprite2D:animation")
+tracks/5/interp = 1
+tracks/5/loop_wrap = true
+tracks/5/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [&"idle_up"]
+}
+tracks/6/type = "value"
+tracks/6/imported = false
+tracks/6/enabled = true
+tracks/6/path = NodePath("Actors/Boss/Visuals/AnimatedSprite2D:animation")
+tracks/6/interp = 1
+tracks/6/loop_wrap = true
+tracks/6/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [&"boss_idle"]
+}
+tracks/7/type = "value"
+tracks/7/imported = false
+tracks/7/enabled = true
+tracks/7/path = NodePath("Actors/Player/Camera2D:visible")
+tracks/7/interp = 1
+tracks/7/loop_wrap = true
+tracks/7/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [false]
+}
+tracks/8/type = "value"
+tracks/8/imported = false
+tracks/8/enabled = true
+tracks/8/path = NodePath("UI:visible")
+tracks/8/interp = 1
+tracks/8/loop_wrap = true
+tracks/8/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [false]
+}
+
+[sub_resource type="Animation" id="Animation_6lfar"]
+resource_name = "boss_intro"
+length = 14.0
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Actors/Player:position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(3, 6),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Vector2(423, 512), Vector2(423, 467)]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("CinematicCamera:position")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0, 3, 6, 11, 11.966666, 14),
+"transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1),
+"update": 0,
+"values": [Vector2(420, 261), Vector2(420, 464), Vector2(420, 464), Vector2(420, 271), Vector2(420, 271), Vector2(420, 377)]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("CinematicCamera:zoom")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0, 3, 12, 14),
+"transitions": PackedFloat32Array(1, 1, 1, 1),
+"update": 0,
+"values": [Vector2(1, 1), Vector2(1.5, 1.5), Vector2(1.5, 1.5), Vector2(1, 1)]
+}
+tracks/3/type = "value"
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/path = NodePath("Actors/Boss:visible")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/keys = {
+"times": PackedFloat32Array(0, 5, 5.01),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 1,
+"values": [false, false, true]
+}
+tracks/4/type = "value"
+tracks/4/imported = false
+tracks/4/enabled = true
+tracks/4/path = NodePath("Actors/Boss:position")
+tracks/4/interp = 1
+tracks/4/loop_wrap = true
+tracks/4/keys = {
+"times": PackedFloat32Array(6, 10),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Vector2(423, 171), Vector2(423, 253)]
+}
+tracks/5/type = "value"
+tracks/5/imported = false
+tracks/5/enabled = true
+tracks/5/path = NodePath("Actors/Player/Visuals/AnimatedSprite2D:animation")
+tracks/5/interp = 1
+tracks/5/loop_wrap = true
+tracks/5/keys = {
+"times": PackedFloat32Array(0, 3, 6, 14),
+"transitions": PackedFloat32Array(1, 1, 1, 1),
+"update": 1,
+"values": [&"idle_up", &"walk_up", &"idle_up", &"idle_up"]
+}
+tracks/6/type = "value"
+tracks/6/imported = false
+tracks/6/enabled = true
+tracks/6/path = NodePath("Actors/Boss/Visuals/AnimatedSprite2D:animation")
+tracks/6/interp = 1
+tracks/6/loop_wrap = true
+tracks/6/keys = {
+"times": PackedFloat32Array(5.01, 14),
+"transitions": PackedFloat32Array(1, 1),
+"update": 1,
+"values": [&"boss_idle", &"boss_idle"]
+}
+tracks/7/type = "value"
+tracks/7/imported = false
+tracks/7/enabled = true
+tracks/7/path = NodePath("Actors/Player/Camera2D:visible")
+tracks/7/interp = 1
+tracks/7/loop_wrap = true
+tracks/7/keys = {
+"times": PackedFloat32Array(0, 14),
+"transitions": PackedFloat32Array(1, 1),
+"update": 1,
+"values": [false, false]
+}
+tracks/8/type = "value"
+tracks/8/imported = false
+tracks/8/enabled = true
+tracks/8/path = NodePath("UI:visible")
+tracks/8/interp = 1
+tracks/8/loop_wrap = true
+tracks/8/keys = {
+"times": PackedFloat32Array(0, 14),
+"transitions": PackedFloat32Array(1, 1),
+"update": 1,
+"values": [false, true]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_24byn"]
+_data = {
+&"RESET": SubResource("Animation_0i6hh"),
+&"boss_intro": SubResource("Animation_6lfar")
+}
+
 [node name="NeonArena" type="Node2D" unique_id=1749471234]
+script = ExtResource("1_52ghl")
 
 [node name="Environment" type="Node2D" parent="." unique_id=768279529]
 
@@ -2002,19 +2234,34 @@ position = Vector2(421, 128)
 [node name="Actors" type="Node2D" parent="." unique_id=576906086]
 
 [node name="Player" parent="Actors" unique_id=168021641 instance=ExtResource("36_oxssm")]
-position = Vector2(416, 480)
+position = Vector2(423, 512)
+
+[node name="AnimatedSprite2D" parent="Actors/Player/Visuals" parent_id_path=PackedInt32Array(168021641, 252795384) index="0" unique_id=197890489]
+animation = &"idle_up"
+autoplay = "idle_up"
+
+[node name="Camera2D" parent="Actors/Player" index="3" unique_id=1122963074]
+visible = false
 
 [node name="Boss" parent="Actors" unique_id=1162129578 instance=ExtResource("43_boss")]
-position = Vector2(423, 257)
+visible = false
+position = Vector2(423, 171)
+
+[node name="AnimatedSprite2D" parent="Actors/Boss/Visuals" parent_id_path=PackedInt32Array(1162129578, 1745154061) index="0" unique_id=1129530825]
+animation = &"boss_idle"
+autoplay = "boss_idle"
+frame_progress = 0.42648193
 
 [node name="Gameplay" type="Node2D" parent="." unique_id=971751614]
 
 [node name="LevelController" type="Node" parent="Gameplay" unique_id=182736450]
 script = ExtResource("38_lnwxv")
+AutoEnableGameplay = false
 DoorPath = NodePath("../../Environment/Door")
 NextLevelPath = "res://Scenes/Ending.tscn"
 
 [node name="UI" type="CanvasLayer" parent="." unique_id=220098163]
+visible = false
 
 [node name="HUD" type="Control" parent="UI" unique_id=129384756]
 texture_filter = 1
@@ -2116,3 +2363,15 @@ text = "SYSTEM COMPROMISED"
 horizontal_alignment = 1
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="." unique_id=1476055774]
+libraries/ = SubResource("AnimationLibrary_24byn")
+
+[node name="DialogueBox" parent="." unique_id=1245189681 instance=ExtResource("44_c6nwv")]
+visible = false
+position = Vector2(138, 170)
+
+[node name="CinematicCamera" type="Camera2D" parent="." unique_id=850690498]
+position = Vector2(420, 261)
+scale = Vector2(0.5, 0.5)
+
+[editable path="Actors/Player"]
+[editable path="Actors/Boss"]
