@@ -491,4 +491,12 @@ public partial class BossController : EnemyController {
 
 		GD.Print($"[BossController] Boss defeated: spawned {BossLootCount} crystal collectibles around {GlobalPosition}.");
 	}
+
+	public override void SetAIEnabled(bool enabled) {
+		// Boss AI lifecycle in Level 5 is directly managed via set_physics_process in level_5_controller.
+		// Avoid base.SetAIEnabled calling base UpdateAnimation with non-existent direction animations.
+		if (!enabled) {
+			Velocity = Vector2.Zero;
+		}
+	}
 }
