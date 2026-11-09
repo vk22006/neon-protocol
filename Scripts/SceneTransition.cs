@@ -78,36 +78,48 @@ public partial class SceneTransition : CanvasLayer {
 		}
 	}
 
-	public static void ChangeScene(SceneTree tree, string targetScenePath) {
+	public static SceneTransition GetOrCreateInstance(SceneTree tree) {
+		if (Instance != null && GodotObject.IsInstanceValid(Instance)) {
+			return Instance;
+		}
+
+		if (tree == null) {
+			return null;
+		}
+
+		// Look for autoload instance under root
+		Instance = tree.Root.GetNodeOrNull<SceneTransition>("SceneTransition");
+
+		// If still null, instantiate dynamically and add to root
+		if (Instance == null || !GodotObject.IsInstanceValid(Instance)) {
+			PackedScene scene = GD.Load<PackedScene>("res://Scenes/Cutscenes/SceneTransition.tscn");
+			if (scene != null) {
+				var transitionNode = scene.Instantiate<SceneTransition>();
+				tree.Root.AddChild(transitionNode);
+				Instance = transitionNode;
+			}
+		}
+
+		return Instance;
+	}
+
+	public static void ChangeScene(SceneTree tree, string targetScenePath, bool autoFadeIn = true) {
 		if (tree == null) {
 			GD.PushError("[SceneTransition] SceneTree is null!");
 			return;
 		}
 
-		if (Instance == null || !GodotObject.IsInstanceValid(Instance)) {
-			// Look for autoload instance under root
-			Instance = tree.Root.GetNodeOrNull<SceneTransition>("SceneTransition");
-
-			// If still null, instantiate dynamically and add to root
-			if (Instance == null || !GodotObject.IsInstanceValid(Instance)) {
-				PackedScene scene = GD.Load<PackedScene>("res://Scenes/Cutscenes/SceneTransition.tscn");
-				if (scene != null) {
-					var transitionNode = scene.Instantiate<SceneTransition>();
-					tree.Root.AddChild(transitionNode);
-					Instance = transitionNode;
-				}
-			}
-		}
+		Instance = GetOrCreateInstance(tree);
 
 		if (Instance != null && GodotObject.IsInstanceValid(Instance)) {
-			Instance.TransitionToScene(targetScenePath);
+			Instance.TransitionToScene(targetScenePath, autoFadeIn);
 		} else {
 			GD.PushWarning("[SceneTransition] Falling back to direct ChangeSceneToFile.");
 			tree.ChangeSceneToFile(targetScenePath);
 		}
 	}
 
-	public void TransitionToScene(string targetScenePath) {
+	public void TransitionToScene(string targetScenePath, bool autoFadeIn = true) {
 		if (_isTransitioning) {
 			GD.Print($"[SceneTransition] Transition to '{targetScenePath}' ignored: transition already in progress.");
 			return;
@@ -119,11 +131,11 @@ public partial class SceneTransition : CanvasLayer {
 		}
 
 		_isTransitioning = true;
-		Callable.From(() => ExecuteTransition(targetScenePath)).CallDeferred();
+		Callable.From(() => ExecuteTransition(targetScenePath, autoFadeIn)).CallDeferred();
 	}
 
-	private async void ExecuteTransition(string targetScenePath) {
-		GD.Print($"[SceneTransition] Starting transition to '{targetScenePath}'.");
+	private async void ExecuteTransition(string targetScenePath, bool autoFadeIn = true) {
+		GD.Print($"[SceneTransition] Starting transition to '{targetScenePath}' (AutoFadeIn: {autoFadeIn}).");
 		EmitSignal(SignalName.TransitionStarted, targetScenePath);
 
 		// 1. Begin with screen fully visible and disable player input
@@ -160,26 +172,39 @@ public partial class SceneTransition : CanvasLayer {
 
 		EmitSignal(SignalName.NewSceneLoaded, targetScenePath);
 
-		// 5. Fade from black back to the gameplay scene
-		await PlayFadeFromBlackAsync();
+		if (autoFadeIn) {
+			// 5. Fade from black back to the gameplay scene
+			await PlayFadeFromBlackAsync();
 
-		// 6. Restore normal player input and gameplay
-		if (_colorRect != null) {
-			_colorRect.Color = new Color(0, 0, 0, 0);
-			_colorRect.Visible = false;
-			_colorRect.MouseFilter = Control.MouseFilterEnum.Ignore;
+			// 6. Restore normal player input and gameplay
+			if (_colorRect != null) {
+				_colorRect.Color = new Color(0, 0, 0, 0);
+				_colorRect.Visible = false;
+				_colorRect.MouseFilter = Control.MouseFilterEnum.Ignore;
+			}
+
+			EnableCurrentPlayerInput();
+
+			_isTransitioning = false;
+			EmitSignal(SignalName.FadeInCompleted);
+			EmitSignal(SignalName.TransitionFinished);
+			GD.Print($"[SceneTransition] Transition to '{targetScenePath}' finished successfully.");
+		} else {
+			_isTransitioning = false;
+			GD.Print($"[SceneTransition] Scene changed to '{targetScenePath}'. Screen remains black awaiting destination FadeFromBlack.");
 		}
+	}
 
-		EnableCurrentPlayerInput();
+	public async Task FadeToBlackAsync() {
+		await FadeToBlackInternal();
+	}
 
-		_isTransitioning = false;
-		EmitSignal(SignalName.FadeInCompleted);
-		EmitSignal(SignalName.TransitionFinished);
-		GD.Print($"[SceneTransition] Transition to '{targetScenePath}' finished successfully.");
+	public async Task FadeFromBlackAsync() {
+		await FadeFromBlackInternal();
 	}
 
 	public Signal FadeToBlack() {
-		_ = FadeToBlackInternal();
+		_ = FadeToBlackAsync();
 		return new Signal(this, SignalName.FadeOutCompleted);
 	}
 
@@ -188,7 +213,7 @@ public partial class SceneTransition : CanvasLayer {
 	}
 
 	public Signal FadeFromBlack() {
-		_ = FadeFromBlackInternal();
+		_ = FadeFromBlackAsync();
 		return new Signal(this, SignalName.FadeInCompleted);
 	}
 
@@ -270,8 +295,14 @@ public partial class SceneTransition : CanvasLayer {
 	}
 
 	private void EnableCurrentPlayerInput() {
-		PlayerController player = GetTree().GetFirstNodeInGroup("player") as PlayerController
-			?? GetTree().GetFirstNodeInGroup("Player") as PlayerController;
+		LevelController levelController = GetTree()?.GetFirstNodeInGroup("level_controller") as LevelController;
+		if (levelController != null && !levelController.IsGameplayEnabled) {
+			GD.Print("[SceneTransition] Skipping EnableCurrentPlayerInput: LevelController gameplay is currently disabled.");
+			return;
+		}
+
+		PlayerController player = GetTree()?.GetFirstNodeInGroup("player") as PlayerController
+			?? GetTree()?.GetFirstNodeInGroup("Player") as PlayerController;
 
 		if (player != null && GodotObject.IsInstanceValid(player)) {
 			player.SetInputEnabled(true);
