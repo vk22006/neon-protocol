@@ -4,22 +4,36 @@ extends Node2D
 @onready var role_label: RichTextLabel = $DialogueBox/Role
 @onready var dialogue_label: RichTextLabel = $DialogueBox/Dialogue
 @onready var player = $Actors/Player
+@onready var level_controller = $Gameplay/LevelController if has_node("Gameplay/LevelController") else get_tree().get_first_node_in_group("level_controller")
 @onready var scene_transition = get_node_or_null("/root/SceneTransition")
 
 func _ready() -> void:
-	player.SetInputEnabled(false)
-	set_enemies_enabled(false)
+	if level_controller != null:
+		level_controller.SetGameplayEnabled(false)
+	else:
+		player.SetInputEnabled(false)
+		set_enemies_enabled(false)
 
 	print("Level 1 loaded")
 
 	await scene_transition.FadeFromBlack()
 
+	# Explicitly re-enforce disabled gameplay state during cutscene dialogue
+	if level_controller != null:
+		level_controller.SetGameplayEnabled(false)
+	else:
+		player.SetInputEnabled(false)
+		set_enemies_enabled(false)
+
 	print("Fade in completed")
 
 	await start_dialogue()
 
-	player.SetInputEnabled(true)
-	set_enemies_enabled(true)
+	if level_controller != null:
+		level_controller.SetGameplayEnabled(true)
+	else:
+		player.SetInputEnabled(true)
+		set_enemies_enabled(true)
 
 func start_dialogue() -> void:
 	dialogue_box.visible = true
