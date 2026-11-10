@@ -20,9 +20,11 @@ public partial class DoorController : Node2D {
 	private CollisionShape2D _collisionShape;
 	private Area2D _exitArea;
 	private bool _isOpen = false;
+	private bool _isFullyOpen = false;
 	private bool _hasTriggeredExit = false;
 
 	public bool IsOpen => _isOpen;
+	public bool IsFullyOpen => _isFullyOpen;
 	public bool HasTriggeredExit => _hasTriggeredExit;
 
 	public override void _Ready() {
@@ -35,6 +37,7 @@ public partial class DoorController : Node2D {
 
 		// Always ensure the door starts strictly in its closed state
 		_isOpen = false;
+		_isFullyOpen = false;
 		_hasTriggeredExit = false;
 
 		if (_doorVisuals != null) {
@@ -72,6 +75,8 @@ public partial class DoorController : Node2D {
 			AddChild(_exitArea);
 		}
 
+		// Ensure exit area detection is strictly disabled initially
+		_exitArea.SetDeferred(Area2D.PropertyName.Monitoring, false);
 		_exitArea.BodyEntered += OnExitAreaBodyEntered;
 	}
 
@@ -80,19 +85,20 @@ public partial class DoorController : Node2D {
 	}
 
 	private void TryTriggerPlayerExit(Node2D body) {
-		if (_hasTriggeredExit || !_isOpen) {
+		if (_hasTriggeredExit || !_isOpen || !_isFullyOpen) {
 			return;
 		}
 
-		if (body is PlayerController player && !player.IsDead) {
+		if (body is PlayerController player && !player.IsDead && (player.IsInGroup("player") || player.IsInGroup("Player"))) {
 			_hasTriggeredExit = true;
-			GD.Print("[DoorController] Player entered open door. Emitting PlayerEnteredDoor signal.");
+			GD.Print("[DoorController] Player entered fully opened door. Emitting PlayerEnteredDoor signal.");
 			EmitSignal(SignalName.PlayerEnteredDoor, player);
 		}
 	}
 
 	public void Close() {
 		_isOpen = false;
+		_isFullyOpen = false;
 		_hasTriggeredExit = false;
 
 		if (_doorVisuals != null) {
@@ -105,6 +111,10 @@ public partial class DoorController : Node2D {
 		if (_collisionShape != null) {
 			_collisionShape.SetDeferred(CollisionShape2D.PropertyName.Disabled, false);
 		}
+
+		if (_exitArea != null) {
+			_exitArea.SetDeferred(Area2D.PropertyName.Monitoring, false);
+		}
 	}
 
 	public void Open() {
@@ -113,30 +123,49 @@ public partial class DoorController : Node2D {
 		}
 
 		_isOpen = true;
+		_isFullyOpen = false;
+
+		// Exit area monitoring remains inactive while the door opening animation plays
+		if (_exitArea != null) {
+			_exitArea.SetDeferred(Area2D.PropertyName.Monitoring, false);
+		}
 
 		if (_doorVisuals != null && _doorVisuals.SpriteFrames != null && _doorVisuals.SpriteFrames.HasAnimation("success")) {
 			_doorVisuals.Play("success");
 		} else {
-			if (_collisionShape != null) {
-				_collisionShape.SetDeferred(CollisionShape2D.PropertyName.Disabled, true);
-			}
-			EmitSignal(SignalName.DoorOpened);
-			CheckForOverlappingPlayer();
+			OnDoorFullyOpened();
 		}
 	}
 
 	private void OnAnimationFinished() {
 		if (_doorVisuals != null && _doorVisuals.Animation == "success") {
-			if (_collisionShape != null) {
-				_collisionShape.SetDeferred(CollisionShape2D.PropertyName.Disabled, true);
-			}
-			EmitSignal(SignalName.DoorOpened);
-			CheckForOverlappingPlayer();
+			OnDoorFullyOpened();
 		}
 	}
 
+	private void OnDoorFullyOpened() {
+		if (_isFullyOpen) {
+			return;
+		}
+
+		_isFullyOpen = true;
+
+		if (_collisionShape != null) {
+			_collisionShape.SetDeferred(CollisionShape2D.PropertyName.Disabled, true);
+		}
+
+		if (_exitArea != null) {
+			_exitArea.SetDeferred(Area2D.PropertyName.Monitoring, true);
+		}
+
+		EmitSignal(SignalName.DoorOpened);
+		GD.Print("[DoorController] Door is now fully open. Activated exit area monitoring.");
+
+		Callable.From(CheckForOverlappingPlayer).CallDeferred();
+	}
+
 	private void CheckForOverlappingPlayer() {
-		if (_hasTriggeredExit || !_isOpen || _exitArea == null) {
+		if (_hasTriggeredExit || !_isOpen || !_isFullyOpen || _exitArea == null || !_exitArea.Monitoring) {
 			return;
 		}
 
