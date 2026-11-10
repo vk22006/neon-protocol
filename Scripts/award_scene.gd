@@ -62,8 +62,15 @@ func start_dialogue() -> void:
 	role_label.change_text("You:")
 	await dialogue_label.change_text("We did this together!")
 
-	await get_tree().create_timer(3.0).timeout
+	await get_tree().create_timer(1.0).timeout
 	dialogue_box.visible = false
+	await get_tree().create_timer(3.0).timeout
+
+	await SceneTransition.FadeToBlack()
+
+	get_tree().change_scene_to_file("res://Scenes/Cutscenes/EndingMessage.tscn")
+
+	await SceneTransition.FadeFromBlack()
 	
 func wait_for_animation(animation_name: StringName) -> void:
 	while animation_player.is_playing() and animation_player.current_animation == animation_name:
