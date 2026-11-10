@@ -30,6 +30,71 @@ public partial class SceneTransition : CanvasLayer {
 	public static SceneTransition Instance { get; private set; }
 	public static bool IsTransitioning => Instance != null && Instance._isTransitioning;
 
+	public static void ResetSession() {
+		LevelController.ResetGameSession();
+	}
+
+	public void ResetGameSession() {
+		ResetSession();
+		_isTransitioning = false;
+		if (_colorRect != null) {
+			_colorRect.Visible = false;
+			_colorRect.Color = new Color(0, 0, 0, 0);
+			_colorRect.MouseFilter = Control.MouseFilterEnum.Ignore;
+		}
+		GD.Print("[SceneTransition] Game session reset complete.");
+	}
+
+	public bool IsTransitionActive() {
+		return _isTransitioning;
+	}
+
+	public bool HasValidSave() {
+		return SaveManager.HasValidSave();
+	}
+
+	public Godot.Collections.Dictionary GetSaveData() {
+		var data = SaveManager.LoadSave();
+		if (data == null) {
+			return new Godot.Collections.Dictionary();
+		}
+		return new Godot.Collections.Dictionary {
+			{ "version", data.Version },
+			{ "timestamp", data.Timestamp },
+			{ "current_level", data.CurrentLevel },
+			{ "level_index", data.LevelIndex },
+			{ "crystal_count", data.CrystalCount }
+		};
+	}
+
+	public void SetPreservedCrystals(int count) {
+		LevelController.PreservedCrystalCount = Mathf.Max(0, count);
+	}
+
+	public void ResumeGame(string targetLevelPath, int crystalCount) {
+		LevelController.PreservedCrystalCount = Mathf.Max(0, crystalCount);
+		bool autoFadeIn = !targetLevelPath.Contains("Level_1") && !targetLevelPath.Contains("Level_5");
+		GD.Print($"[SceneTransition] ResumeGame: target='{targetLevelPath}', crystals={crystalCount}, autoFadeIn={autoFadeIn}");
+		TransitionToScene(targetLevelPath, autoFadeIn);
+	}
+
+	public void StartNewGame(string targetScenePath = "res://Scenes/Cutscenes/IntroMessage.tscn", string checkpointLevelPath = "res://Scenes/Levels/Level_1.tscn") {
+		ResetGameSession();
+		string savePath = targetScenePath.Contains("Scenes/Levels/") ? targetScenePath : checkpointLevelPath;
+		SaveManager.Save(savePath, 0);
+		bool autoFadeIn = !targetScenePath.Contains("Level_1") && !targetScenePath.Contains("Level_5");
+		GD.Print($"[SceneTransition] StartNewGame: targetScene='{targetScenePath}', checkpoint='{savePath}', autoFadeIn={autoFadeIn}");
+		TransitionToScene(targetScenePath, autoFadeIn);
+	}
+
+	public static void DeleteSave() {
+		SaveManager.DeleteSave();
+	}
+
+	public void DeleteSaveFile() {
+		DeleteSave();
+	}
+
 	private bool _isTransitioning = false;
 	private ColorRect _colorRect;
 	private AnimationPlayer _animPlayer;
@@ -223,6 +288,9 @@ public partial class SceneTransition : CanvasLayer {
 
 	private async Task FadeToBlackInternal() {
 		if (_isTransitioning) {
+			if (_colorRect != null && _colorRect.Color.A >= 0.99f) {
+				EmitSignal(SignalName.FadeOutCompleted);
+			}
 			return;
 		}
 
