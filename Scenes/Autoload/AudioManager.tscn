@@ -1,0 +1,13 @@
+[gd_scene format=3 uid="uid://dbqw64lbh2uwp"]
+
+[ext_resource type="Script" uid="uid://clytpen5swxlv" path="res://Scripts/audio_manager.gd" id="1_oac8u"]
+[ext_resource type="AudioStream" uid="uid://dkukmnt2liq8g" path="res://Assets/music/mainMenu_Exploration/mondmatt-lost-in-space-130521.mp3" id="2_i4dsl"]
+
+[node name="AudioManager" type="Node" unique_id=485065856]
+script = ExtResource("1_oac8u")
+
+[node name="MusicPlayer" type="AudioStreamPlayer" parent="." unique_id=2107130569]
+stream = ExtResource("2_i4dsl")
+volume_db = -6.0
+autoplay = true
+bus = &"Music"
