@@ -44,9 +44,9 @@
 [ext_resource type="Texture2D" uid="uid://c3dy1fpytxeyq" path="res://addons/crystal-ui.png" id="42_ywgya"]
 [ext_resource type="PackedScene" uid="uid://bflibc5xnqwvr" path="res://Scenes/Boss.tscn" id="43_boss"]
 [ext_resource type="PackedScene" uid="uid://tddhvql1gvxt" path="res://Assets/dialogues/dialogue.tscn" id="44_c6nwv"]
-
 [ext_resource type="Texture2D" uid="uid://b4rlxrr35mxvu" path="res://addons/pixel_ui_scifi/icons/pause.png" id="45_pause_icon"]
-[ext_resource type="PackedScene" uid="uid://pausemenu01scene" path="res://Scenes/UI/PauseMenu.tscn" id="46_pause_menu"]
+[ext_resource type="PackedScene" uid="uid://w4n8cvue7jvq" path="res://Scenes/UI/PauseMenu.tscn" id="46_pause_menu"]
+
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_bo1nx"]
 texture = ExtResource("1_t48kg")
 0:0/0 = 0
@@ -2330,6 +2330,7 @@ layout_mode = 2
 text = "00"
 
 [node name="PauseButton" type="Button" parent="UI/HUD" unique_id=712398451]
+custom_minimum_size = Vector2(24, 24)
 layout_mode = 1
 anchors_preset = 1
 anchor_left = 1.0
@@ -2339,8 +2340,6 @@ offset_top = 12.0
 offset_right = -14.0
 offset_bottom = 36.0
 grow_horizontal = 0
-custom_minimum_size = Vector2(24, 24)
-focus_mode = 2
 theme = ExtResource("39_mxsnq")
 icon = ExtResource("45_pause_icon")
 icon_alignment = 1
