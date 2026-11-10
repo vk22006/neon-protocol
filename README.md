@@ -2,7 +2,8 @@
 
 A 2D top-down sci-fi survival shooter built with Godot 4.7.1 Mono and C#.
 
-![Neon Protocol Gameplay](docs/img/gameplay.png)
+![Main Menu](docs/img/main_menu.png)
+![Gameplay](docs/img/gameplay.png)
 
 ## Tech Stack
 
