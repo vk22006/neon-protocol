@@ -34,7 +34,8 @@ public partial class EndingScreen : Control {
 
 		_isRestarting = true;
 		GD.Print("[EndingScreen] Player initiated restart from ending screen. Resetting run to Level 1 with fade transition.");
-		LevelController.PreservedCrystalCount = 0;
+		LevelController.ResetGameSession();
+		SaveManager.Save("res://Scenes/Levels/Level_1.tscn", 0);
 		SceneTransition.ChangeScene(GetTree(), "res://Scenes/Levels/Level_1.tscn");
 	}
 }
