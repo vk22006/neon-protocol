@@ -3,13 +3,20 @@ extends Control
 @export_range(10.0, 120.0, 1.0) var typing_speed: float = 35.0
 
 @onready var subtitle_label: Label = $CenterContainer/VBoxContainer/SubtitleLabel
+@onready var scene_transition = get_node_or_null("/root/SceneTransition")
 
 var typing_tween: Tween
 
 
 func _ready() -> void:
 	subtitle_label.visible_characters = 0
-	start_typing()
+	await start_typing()
+	
+	await get_tree().create_timer(13.0).timeout
+	
+	await SceneTransition.FadeToBlack()
+	get_tree().change_scene_to_file("res://Scenes/Cutscenes/IntroCutScene.tscn")
+	await SceneTransition.FadeFromBlack()
 
 
 func start_typing() -> void:
