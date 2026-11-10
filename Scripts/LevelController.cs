@@ -56,6 +56,15 @@ public partial class LevelController : Node {
 
 	public static int PreservedCrystalCount { get; set; } = 0;
 
+	public static void ResetGameSession() {
+		PreservedCrystalCount = 0;
+		GD.Print("[LevelController] Game session progression reset. PreservedCrystalCount = 0.");
+	}
+
+	public void ResetSession() {
+		ResetGameSession();
+	}
+
 	private DoorController _door;
 	private PlayerController _player;
 	private bool _doorConnected = false;
@@ -230,7 +239,6 @@ public partial class LevelController : Node {
 			_livingEnemies.Add(enemy);
 
 			enemy.EnemyDefeated += () => HandleEnemyDefeated(enemy);
-			enemy.EnemyDied += () => HandleEnemyDefeated(enemy);
 			enemy.TreeExited += () => OnEnemyTreeExited(enemy);
 
 			// Inherit the current gameplay state
@@ -260,6 +268,12 @@ public partial class LevelController : Node {
 		// Apply initial gameplay state if not explicitly controlled by a cutscene controller
 		if (!_gameplayExplicitlyControlled && AutoEnableGameplay) {
 			SetGameplayEnabled(true);
+		}
+
+		// Checkpoint save upon entering a playable level
+		string currentScenePath = GetTree().CurrentScene?.SceneFilePath ?? "";
+		if (currentScenePath.Contains("Scenes/Levels/Level_")) {
+			SaveManager.Save(currentScenePath, PreservedCrystalCount);
 		}
 
 		// Verify door is closed
@@ -366,8 +380,8 @@ public partial class LevelController : Node {
 			return;
 		}
 
-		if (_door != null && !_door.IsOpen) {
-			GD.Print("[LevelController] Cannot transition: Door is not open.");
+		if (_door != null && (!_door.IsOpen || !_door.IsFullyOpen)) {
+			GD.Print("[LevelController] Cannot transition: Door is not fully open.");
 			return;
 		}
 
@@ -382,6 +396,11 @@ public partial class LevelController : Node {
 
 		string nextScene = GetNextLevelScenePath();
 		GD.Print($"[LevelController] Transitioning to next level: '{nextScene}'. Preserved crystals: {PreservedCrystalCount}");
+
+		// Checkpoint save when transitioning to next playable level
+		if (nextScene.Contains("Scenes/Levels/Level_")) {
+			SaveManager.Save(nextScene, PreservedCrystalCount);
+		}
 
 		EmitSignal(SignalName.LevelTransitionStarted, nextScene);
 
@@ -411,7 +430,7 @@ public partial class LevelController : Node {
 			return "res://Scenes/Levels/Level_5.tscn";
 		}
 		if (currentScenePath.Contains("Level_5") || currentSceneName.Contains("Level_5") || currentSceneName == "Level5") {
-			return "res://Scenes/Ending.tscn";
+			return "res://Scenes/Cutscenes/PostClimaxCutScene.tscn";
 		}
 
 		return "res://Scenes/Levels/Level_1.tscn";
@@ -441,7 +460,8 @@ public partial class LevelController : Node {
 	public void RestartRun() {
 		_isRestarting = false;
 		_isTransitioning = false;
-		PreservedCrystalCount = 0;
+		ResetGameSession();
+		SaveManager.Save("res://Scenes/Levels/Level_1.tscn", 0);
 
 		GD.Print("[LevelController] Executing full run reset to Level 1 with fade transition.");
 		SceneTransition.ChangeScene(GetTree(), "res://Scenes/Levels/Level_1.tscn");
