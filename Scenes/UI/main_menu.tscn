@@ -1,0 +1,95 @@
+[gd_scene format=3 uid="uid://jxel8opunvo3"]
+
+[ext_resource type="Theme" uid="uid://b4po10m7x2tj6" path="res://addons/pixel_ui_scifi/themes/cyan.tres" id="1_nu56v"]
+[ext_resource type="Texture2D" uid="uid://b2stvbfphcabf" path="res://Assets/skyline_main.png" id="2_i2xx2"]
+[ext_resource type="Script" uid="uid://0dyhmulnwnsw" path="res://Scripts/main_menu.gd" id="2_o14dv"]
+
+[node name="MainMenu" type="Control" unique_id=987123456]
+texture_filter = 1
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource("1_nu56v")
+script = ExtResource("2_o14dv")
+
+[node name="TextureRect" type="TextureRect" parent="." unique_id=2037884346]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("2_i2xx2")
+stretch_mode = 6
+
+[node name="Overlay" type="ColorRect" parent="." unique_id=509949658]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0, 0, 0, 0.19607843)
+
+[node name="MenuLayout" type="MarginContainer" parent="." unique_id=398060389]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="CenterContainer" type="CenterContainer" parent="MenuLayout" unique_id=220456744]
+layout_mode = 2
+
+[node name="MenuColumn" type="VBoxContainer" parent="MenuLayout/CenterContainer" unique_id=474251302]
+layout_mode = 2
+theme_override_constants/separation = 24
+alignment = 1
+
+[node name="GameTitle" type="Label" parent="MenuLayout/CenterContainer/MenuColumn" unique_id=96192116]
+layout_mode = 2
+theme_override_font_sizes/font_size = 40
+text = "Neon Protocol"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="MenuButtonsCenter" type="CenterContainer" parent="MenuLayout/CenterContainer/MenuColumn" unique_id=606066323]
+layout_mode = 2
+
+[node name="MenuButtons" type="VBoxContainer" parent="MenuLayout/CenterContainer/MenuColumn/MenuButtonsCenter" unique_id=554067575]
+layout_mode = 2
+theme_override_constants/separation = 10
+alignment = 1
+
+[node name="NewGameBtn" type="Button" parent="MenuLayout/CenterContainer/MenuColumn/MenuButtonsCenter/MenuButtons" unique_id=530405339]
+custom_minimum_size = Vector2(220, 25)
+layout_mode = 2
+theme_override_font_sizes/font_size = 14
+text = "NEW GAME"
+
+[node name="ResumeBtn" type="Button" parent="MenuLayout/CenterContainer/MenuColumn/MenuButtonsCenter/MenuButtons" unique_id=782811779]
+custom_minimum_size = Vector2(220, 25)
+layout_mode = 2
+theme_override_font_sizes/font_size = 14
+text = "RESUME"
+
+[node name="SettingsBtn" type="Button" parent="MenuLayout/CenterContainer/MenuColumn/MenuButtonsCenter/MenuButtons" unique_id=1783277500]
+custom_minimum_size = Vector2(220, 25)
+layout_mode = 2
+theme_override_font_sizes/font_size = 14
+text = "SETTINGS"
+
+[node name="ExitBtn" type="Button" parent="MenuLayout/CenterContainer/MenuColumn/MenuButtonsCenter/MenuButtons" unique_id=768364654]
+custom_minimum_size = Vector2(220, 25)
+layout_mode = 2
+theme_override_font_sizes/font_size = 14
+text = "EXIT"
+
+[connection signal="pressed" from="MenuLayout/CenterContainer/MenuColumn/MenuButtonsCenter/MenuButtons/NewGameBtn" to="." method="_on_new_game_btn_pressed"]
+[connection signal="pressed" from="MenuLayout/CenterContainer/MenuColumn/MenuButtonsCenter/MenuButtons/ResumeBtn" to="." method="_on_resume_btn_pressed"]
+[connection signal="pressed" from="MenuLayout/CenterContainer/MenuColumn/MenuButtonsCenter/MenuButtons/SettingsBtn" to="." method="_on_settings_btn_pressed"]
+[connection signal="pressed" from="MenuLayout/CenterContainer/MenuColumn/MenuButtonsCenter/MenuButtons/ExitBtn" to="." method="_on_exit_btn_pressed"]
