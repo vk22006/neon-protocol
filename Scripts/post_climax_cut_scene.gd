@@ -70,6 +70,9 @@ func start_dialogue() -> void:
 
 	animation_player.play("leaving_home")
 	await animation_player.animation_finished
+	
+	await SceneTransition.FadeFromBlack()
+	get_tree().change_scene_to_file("res://Scenes/Cutscenes/EndingIntermediateMessage.tscn")
 
 	
 
