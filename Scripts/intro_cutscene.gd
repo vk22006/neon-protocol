@@ -7,6 +7,11 @@ extends Node2D
 @onready var scene_transition = get_node_or_null("/root/SceneTransition")
 
 func _ready() -> void:
+	AudioManager.play_music(
+		preload("res://Assets/music/mainMenu_Exploration/briefing-ambience.wav"),
+		2.0
+	)
+	
 	print("SceneTransition: ", scene_transition)
 	animation_player.play("intro_opening")
 	await animation_player.animation_finished
