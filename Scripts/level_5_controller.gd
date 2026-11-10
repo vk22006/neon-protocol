@@ -20,6 +20,10 @@ var original_dialogue_text: Color
 var original_role_text: Color
 
 func _ready() -> void:
+	AudioManager.play_music(
+		preload("res://Assets/music/combat_boss/magiksolo-informa-incubation-278098.mp3"),
+		2.0
+	)
 	original_dialogue_bg = dialogue_background.color
 	original_dialogue_text = dialogue_label.modulate
 	original_role_text = role_label.modulate
@@ -100,6 +104,11 @@ func transition_to_gameplay() -> void:
 
 	# Fade to black
 	await scene_transition.FadeToBlack()
+	
+	AudioManager.play_music(
+		preload("res://Assets/music/combat_boss/amarantamusic-robot-invasion-112138.wav"),
+		2.0
+	)
 
 	# Switch cameras while screen is black
 	player_camera.enabled = true
