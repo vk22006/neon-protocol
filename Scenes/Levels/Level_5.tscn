@@ -45,6 +45,8 @@
 [ext_resource type="PackedScene" uid="uid://bflibc5xnqwvr" path="res://Scenes/Boss.tscn" id="43_boss"]
 [ext_resource type="PackedScene" uid="uid://tddhvql1gvxt" path="res://Assets/dialogues/dialogue.tscn" id="44_c6nwv"]
 
+[ext_resource type="Texture2D" uid="uid://b4rlxrr35mxvu" path="res://addons/pixel_ui_scifi/icons/pause.png" id="45_pause_icon"]
+[ext_resource type="PackedScene" uid="uid://pausemenu01scene" path="res://Scenes/UI/PauseMenu.tscn" id="46_pause_menu"]
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_bo1nx"]
 texture = ExtResource("1_t48kg")
 0:0/0 = 0
@@ -2258,7 +2260,7 @@ frame_progress = 0.42648193
 script = ExtResource("38_lnwxv")
 AutoEnableGameplay = false
 DoorPath = NodePath("../../Environment/Door")
-NextLevelPath = "res://Scenes/Ending.tscn"
+NextLevelPath = "res://Scenes/Cutscenes/PostClimaxCutScene.tscn"
 
 [node name="UI" type="CanvasLayer" parent="." unique_id=220098163]
 visible = false
@@ -2275,62 +2277,73 @@ mouse_filter = 2
 theme = ExtResource("39_mxsnq")
 script = ExtResource("40_nfxr8")
 
-[node name="HealthBarContainer" type="VBoxContainer" parent="UI/HUD" unique_id=982341256]
+[node name="StatusContainer" type="VBoxContainer" parent="UI/HUD" unique_id=871239845]
 layout_mode = 0
 offset_left = 14.0
 offset_top = 12.0
 offset_right = 134.0
-offset_bottom = 44.0
+offset_bottom = 68.0
+theme_override_constants/separation = 4
+
+[node name="HealthBarContainer" type="VBoxContainer" parent="UI/HUD/StatusContainer" unique_id=982341256]
+layout_mode = 2
 theme_override_constants/separation = 2
 
-[node name="PlayerHeader" type="HBoxContainer" parent="UI/HUD/HealthBarContainer" unique_id=102938475]
+[node name="PlayerHeader" type="HBoxContainer" parent="UI/HUD/StatusContainer/HealthBarContainer" unique_id=102938475]
 layout_mode = 2
 theme_override_constants/separation = 4
 
-[node name="HeartIcon" type="TextureRect" parent="UI/HUD/HealthBarContainer/PlayerHeader" unique_id=203948576]
+[node name="HeartIcon" type="TextureRect" parent="UI/HUD/StatusContainer/HealthBarContainer/PlayerHeader" unique_id=203948576]
 custom_minimum_size = Vector2(8, 8)
 layout_mode = 2
 texture = ExtResource("41_x607a")
 expand_mode = 1
 stretch_mode = 3
 
-[node name="PlayerTitleLabel" type="Label" parent="UI/HUD/HealthBarContainer/PlayerHeader" unique_id=304958671]
+[node name="PlayerTitleLabel" type="Label" parent="UI/HUD/StatusContainer/HealthBarContainer/PlayerHeader" unique_id=304958671]
 layout_mode = 2
 text = "PLAYER HP"
 
-[node name="HealthLabel" type="Label" parent="UI/HUD/HealthBarContainer" unique_id=873214569]
+[node name="HealthLabel" type="Label" parent="UI/HUD/StatusContainer/HealthBarContainer" unique_id=873214569]
 layout_mode = 2
 text = "100 / 100"
 
-[node name="HealthBar" type="ProgressBar" parent="UI/HUD/HealthBarContainer" unique_id=564738291]
+[node name="HealthBar" type="ProgressBar" parent="UI/HUD/StatusContainer/HealthBarContainer" unique_id=564738291]
 custom_minimum_size = Vector2(100, 8)
 layout_mode = 2
 value = 100.0
 show_percentage = false
 
-[node name="CrystalCounter" type="HBoxContainer" parent="UI/HUD" unique_id=809110156]
-layout_mode = 1
-anchors_preset = 1
-anchor_left = 1.0
-anchor_right = 1.0
-offset_left = -70.0
-offset_top = 12.0
-offset_right = -14.0
-offset_bottom = 28.0
-grow_horizontal = 0
+[node name="CrystalCounter" type="HBoxContainer" parent="UI/HUD/StatusContainer" unique_id=809110156]
+layout_mode = 2
 theme_override_constants/separation = 4
-alignment = 2
 
-[node name="CrystalIcon" type="TextureRect" parent="UI/HUD/CrystalCounter" unique_id=910221267]
+[node name="CrystalIcon" type="TextureRect" parent="UI/HUD/StatusContainer/CrystalCounter" unique_id=910221267]
 custom_minimum_size = Vector2(16, 16)
 layout_mode = 2
 texture = ExtResource("42_ywgya")
 expand_mode = 1
 stretch_mode = 3
 
-[node name="CrystalCountLabel" type="Label" parent="UI/HUD/CrystalCounter" unique_id=121332378]
+[node name="CrystalCountLabel" type="Label" parent="UI/HUD/StatusContainer/CrystalCounter" unique_id=121332378]
 layout_mode = 2
 text = "00"
+
+[node name="PauseButton" type="Button" parent="UI/HUD" unique_id=712398451]
+layout_mode = 1
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -38.0
+offset_top = 12.0
+offset_right = -14.0
+offset_bottom = 36.0
+grow_horizontal = 0
+custom_minimum_size = Vector2(24, 24)
+focus_mode = 2
+theme = ExtResource("39_mxsnq")
+icon = ExtResource("45_pause_icon")
+icon_alignment = 1
 
 [node name="GameOverContainer" type="CenterContainer" parent="UI/HUD" unique_id=345678912]
 visible = false
@@ -2361,6 +2374,8 @@ theme_override_colors/font_shadow_color = Color(0, 0, 0, 0.9)
 theme_override_font_sizes/font_size = 12
 text = "SYSTEM COMPROMISED"
 horizontal_alignment = 1
+
+[node name="PauseMenu" parent="." unique_id=998877661 instance=ExtResource("46_pause_menu")]
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="." unique_id=1476055774]
 libraries/ = SubResource("AnimationLibrary_24byn")

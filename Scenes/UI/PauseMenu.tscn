@@ -1,0 +1,103 @@
+[gd_scene format=3 uid="uid://w4n8cvue7jvq"]
+
+[ext_resource type="Script" uid="uid://dom6mhbbyanxy" path="res://Scripts/PauseMenu.cs" id="1_pause_menu"]
+[ext_resource type="Theme" uid="uid://b4po10m7x2tj6" path="res://addons/pixel_ui_scifi/themes/cyan.tres" id="2_cyan_theme"]
+
+[node name="PauseMenu" type="CanvasLayer" unique_id=778899001]
+process_mode = 3
+layer = 100
+script = ExtResource("1_pause_menu")
+
+[node name="Root" type="Control" parent="." unique_id=778899002]
+process_mode = 3
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+theme = ExtResource("2_cyan_theme")
+
+[node name="DimOverlay" type="ColorRect" parent="Root" unique_id=778899003]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0, 0, 0, 0.65)
+
+[node name="CenterContainer" type="CenterContainer" parent="Root" unique_id=778899004]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="PausePanel" type="Panel" parent="Root/CenterContainer" unique_id=778899005]
+custom_minimum_size = Vector2(160, 170)
+layout_mode = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Root/CenterContainer/PausePanel" unique_id=778899006]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 12.0
+offset_top = 10.0
+offset_right = -12.0
+offset_bottom = -10.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/separation = 8
+alignment = 1
+
+[node name="Title" type="Label" parent="Root/CenterContainer/PausePanel/VBoxContainer" unique_id=778899007]
+layout_mode = 2
+theme_override_font_sizes/font_size = 18
+text = "PAUSED"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="ResumeButton" type="Button" parent="Root/CenterContainer/PausePanel/VBoxContainer" unique_id=778899008]
+custom_minimum_size = Vector2(130, 24)
+layout_mode = 2
+focus_neighbor_top = NodePath("../ExitGameButton")
+focus_neighbor_bottom = NodePath("../SettingsButton")
+focus_next = NodePath("../SettingsButton")
+focus_previous = NodePath("../ExitGameButton")
+theme_override_font_sizes/font_size = 12
+text = "RESUME"
+
+[node name="SettingsButton" type="Button" parent="Root/CenterContainer/PausePanel/VBoxContainer" unique_id=778899009]
+custom_minimum_size = Vector2(130, 24)
+layout_mode = 2
+focus_neighbor_top = NodePath("../ResumeButton")
+focus_neighbor_bottom = NodePath("../BackToMenuButton")
+focus_next = NodePath("../BackToMenuButton")
+focus_previous = NodePath("../ResumeButton")
+theme_override_font_sizes/font_size = 12
+text = "SETTINGS"
+
+[node name="BackToMenuButton" type="Button" parent="Root/CenterContainer/PausePanel/VBoxContainer" unique_id=1457979570]
+custom_minimum_size = Vector2(130, 24)
+layout_mode = 2
+focus_neighbor_top = NodePath("../SettingsButton")
+focus_neighbor_bottom = NodePath("../ExitGameButton")
+focus_next = NodePath("../ExitGameButton")
+focus_previous = NodePath("../SettingsButton")
+theme_override_font_sizes/font_size = 12
+text = "BACK TO MENU"
+
+[node name="ExitGameButton" type="Button" parent="Root/CenterContainer/PausePanel/VBoxContainer" unique_id=778899010]
+custom_minimum_size = Vector2(130, 24)
+layout_mode = 2
+focus_neighbor_top = NodePath("../BackToMenuButton")
+focus_neighbor_bottom = NodePath("../ResumeButton")
+focus_next = NodePath("../ResumeButton")
+focus_previous = NodePath("../BackToMenuButton")
+theme_override_font_sizes/font_size = 12
+text = "EXIT GAME"
