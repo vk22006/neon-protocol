@@ -7,6 +7,10 @@ extends Node2D
 @onready var scene_transition = get_node_or_null("/root/SceneTransition")
 
 func _ready() -> void:
+	AudioManager.play_music(
+		preload("res://Assets/music/ending/thoughtful_cinematic_1.wav"),
+		2.0
+	)
 	animation_player.play("cutscene_opening")
 	await animation_player.animation_finished
 	
