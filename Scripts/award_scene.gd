@@ -6,6 +6,10 @@ extends Node2D
 @onready var dialogue_label: RichTextLabel = $DialogueBox/Dialogue
 @onready var dialogue_background: ColorRect = $DialogueBox/ColorRect
 @onready var scene_transition = get_node_or_null("/root/SceneTransition")
+@onready var newsreader_player: AudioStreamPlayer = $NewsReaderPlayer
+
+@export var newsreader_audio_1: AudioStream
+@export var newsreader_audio_2: AudioStream
 
 const AWARD_DIALOGUE_BG = Color("#FFD700")
 const AWARD_DIALOGUE_TEXT = Color("#B8860B")
@@ -14,6 +18,10 @@ var original_dialogue_bg: Color
 var original_dialogue_text: Color
 
 func _ready() -> void:
+	AudioManager.play_music(
+		preload("res://Assets/music/ending/thoughtful_cinematic_2.wav"),
+		2.0
+	)
 	original_dialogue_bg = dialogue_background.color
 	original_dialogue_text = dialogue_label.modulate
 	
@@ -25,9 +33,10 @@ func start_dialogue() -> void:
 	dialogue_box.visible = true
 	dialogue_label.position = Vector2(118.444, 735.00)
 	dialogue_label.size = Vector2(1020.0, 85.0)
-	dialogue_label.typing_time = float(8.0)
+	dialogue_label.typing_time = float(12.0)
 	
 	role_label.change_text("")
+	play_newsreader_audio(newsreader_audio_1)
 	await dialogue_label.change_text("For extraordinary courage, unwavering determination, and the protection of countless lives, we recognize an individual whose actions brought the truth to light.")
 	
 	await wait_for_animation("public_announcement")
@@ -40,6 +49,7 @@ func start_dialogue() -> void:
 	animation_player.play("awarding_scene")
 	dialogue_box.visible = true
 	role_label.change_text("")
+	play_newsreader_audio(newsreader_audio_2)
 	await dialogue_label.change_text("In recognition of these remarkable contributions, we hereby award...")
 	
 	dialogue_label.typing_time = float(3.0)
@@ -48,8 +58,9 @@ func start_dialogue() -> void:
 	await dialogue_label.change_text("The Order of Gaudium")
 	
 	await wait_for_animation("awarding_scene")
-	
+
 	await get_tree().create_timer(2.0).timeout
+	newsreader_player.stop()
 	restore_dialogue_style()
 	
 	dialogue_label.position = Vector2(118.444, 766.333)
@@ -84,3 +95,12 @@ func set_award_dialogue_style() -> void:
 func restore_dialogue_style() -> void:
 	dialogue_background.color = original_dialogue_bg
 	dialogue_label.modulate = original_dialogue_text
+	
+func play_newsreader_audio(audio: AudioStream) -> void:
+	if audio == null:
+		push_warning("AwardScene: Newsreader audio is not assigned.")
+		return
+
+	newsreader_player.stop()
+	newsreader_player.stream = audio
+	newsreader_player.play()
