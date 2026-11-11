@@ -2,9 +2,11 @@
 
 [ext_resource type="Script" uid="uid://fjjjrjxev3mu" path="res://Scripts/award_scene.gd" id="1_28bq6"]
 [ext_resource type="Texture2D" uid="uid://dihm5canpaeoh" path="res://Assets/skyline.png" id="1_npmyr"]
+[ext_resource type="AudioStream" uid="uid://bev6qe7050vfj" path="res://Assets/SFX/newsreader_1.mp3" id="2_01eob"]
 [ext_resource type="PackedScene" uid="uid://tddhvql1gvxt" path="res://Assets/dialogues/dialogue.tscn" id="2_28bq6"]
 [ext_resource type="Texture2D" uid="uid://bfbhnt61cvaiq" path="res://Assets/interior/floors/Room_Builder_free_16x16.png" id="2_t854k"]
 [ext_resource type="Texture2D" uid="uid://6cckh20n3b7e" path="res://Assets/props/Interiors_free_16x16.png" id="3_s4v2q"]
+[ext_resource type="AudioStream" uid="uid://l1e1grsalenj" path="res://Assets/SFX/newsreader_2.mp3" id="3_wxffi"]
 [ext_resource type="Texture2D" uid="uid://bhe2trtuabgld" path="res://Assets/props/Interiors_free_32x32.png" id="4_4wmxr"]
 [ext_resource type="Texture2D" uid="uid://drh5rjv4hbj82" path="res://Assets/Gaudium_Flag.png" id="5_01eob"]
 [ext_resource type="Texture2D" uid="uid://yrfdwlavw335" path="res://Assets/characters/crew-plum.png" id="6_wxffi"]
@@ -6121,6 +6123,8 @@ _data = {
 
 [node name="PostClimaxAwardScene" type="Node2D" unique_id=1407529047]
 script = ExtResource("1_28bq6")
+newsreader_audio_1 = ExtResource("2_01eob")
+newsreader_audio_2 = ExtResource("3_wxffi")
 
 [node name="Environment" type="Node2D" parent="." unique_id=2065854289]
 
@@ -6213,3 +6217,6 @@ zoom = Vector2(1.7, 1.7)
 [node name="DialogueBox" parent="." unique_id=1245189681 instance=ExtResource("2_28bq6")]
 position = Vector2(33, -29.000002)
 scale = Vector2(0.34, 0.34)
+
+[node name="NewsReaderPlayer" type="AudioStreamPlayer" parent="." unique_id=1388977190]
+bus = &"Dialogue"
