@@ -8,6 +8,8 @@
 [ext_resource type="Texture2D" uid="uid://yr72gvcf8eau" path="res://Assets/fx/smoke-puff-6f.png" id="6_mo1ky"]
 [ext_resource type="PackedScene" uid="uid://b36jut2mwgllt" path="res://Scenes/collectibles/Crystal_Artifact.tscn" id="7_cryst"]
 [ext_resource type="Theme" uid="uid://b4po10m7x2tj6" path="res://addons/pixel_ui_scifi/themes/cyan.tres" id="8_theme_cyan"]
+[ext_resource type="AudioStream" uid="uid://cx18l3fl17cnv" path="res://Assets/SFX/Enemies/laserSmall_002.ogg" id="9_shoot_sfx"]
+[ext_resource type="AudioStream" uid="uid://8w8vn1qtiwvw" path="res://Assets/SFX/Enemies/explosionCrunch_001.ogg" id="10_death_sfx"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_uoxpr"]
 atlas = ExtResource("2_wovta")
@@ -792,6 +794,8 @@ collision_layer = 4
 collision_mask = 3
 script = ExtResource("1_m1htj")
 CrystalDropScene = ExtResource("7_cryst")
+ShootSound = ExtResource("9_shoot_sfx")
+DeathSound = ExtResource("10_death_sfx")
 
 [node name="Visuals" type="Node2D" parent="." unique_id=516328571]
 
@@ -820,3 +824,8 @@ theme_type_variation = &"RedBar"
 max_value = 30.0
 value = 30.0
 show_percentage = false
+
+[node name="ShootAudioPlayer" type="AudioStreamPlayer2D" parent="." unique_id=982341012]
+stream = ExtResource("9_shoot_sfx")
+bus = &"SFX"
+max_polyphony = 2
