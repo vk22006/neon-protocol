@@ -37,7 +37,7 @@ func start_dialogue() -> void:
 	
 	role_label.change_text("")
 	play_newsreader_audio(newsreader_audio_1)
-	await dialogue_label.change_text("For extraordinary courage, unwavering determination, and the protection of countless lives, we recognize an individual whose actions brought the truth to light.")
+	await dialogue_label.change_text("For extraordinary courage, unwavering determination, and the protection of countless lives, we recognize an individual whose actions brought truth to light.", false)
 	
 	await wait_for_animation("public_announcement")
 	
@@ -50,17 +50,16 @@ func start_dialogue() -> void:
 	dialogue_box.visible = true
 	role_label.change_text("")
 	play_newsreader_audio(newsreader_audio_2)
-	await dialogue_label.change_text("In recognition of these remarkable contributions, we hereby award...")
+	await dialogue_label.change_text("In recognition of these remarkable contributions, we hereby award...", false)
 	
 	dialogue_label.typing_time = float(3.0)
 	set_award_dialogue_style()
 	role_label.change_text("")
-	await dialogue_label.change_text("The Order of Gaudium")
+	await dialogue_label.change_text("The Order of Gaudium", false)
 	
 	await wait_for_animation("awarding_scene")
 
 	await get_tree().create_timer(2.0).timeout
-	newsreader_player.stop()
 	restore_dialogue_style()
 	
 	dialogue_label.position = Vector2(118.444, 766.333)
@@ -74,6 +73,7 @@ func start_dialogue() -> void:
 	await dialogue_label.change_text("We did this together!")
 
 	await get_tree().create_timer(1.0).timeout
+	newsreader_player.stop()
 	dialogue_box.visible = false
 	await get_tree().create_timer(3.0).timeout
 
