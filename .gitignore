@@ -6,6 +6,9 @@
 Assets/music/
 Assets/SFX/
 
+# Build files
+releases/
+
 # Misc
 .sf/
 .vscode/
