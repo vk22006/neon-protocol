@@ -16,6 +16,7 @@ Here's a list of sources for the assets used in this game:
     - Pixel UI Sci-Fi by [heyheythere](https://heyheythere.itch.io/)
 6. Others:
     - Modern City Backgrounds Pixel Art by [Craftpix](https://free-game-assets.itch.io/)
+    - [Kenny's](https://kenney.nl/assets/category:Audio) audio assets
 
 ### License Compliance
 
