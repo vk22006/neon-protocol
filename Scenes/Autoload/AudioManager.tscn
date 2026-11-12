@@ -2,12 +2,32 @@
 
 [ext_resource type="Script" uid="uid://clytpen5swxlv" path="res://Scripts/audio_manager.gd" id="1_oac8u"]
 [ext_resource type="AudioStream" uid="uid://dkukmnt2liq8g" path="res://Assets/music/mainMenu_Exploration/mondmatt-lost-in-space-130521.mp3" id="2_i4dsl"]
+[ext_resource type="AudioStream" uid="uid://cjlo5hn0fjlbf" path="res://Assets/SFX/UI/forceField_004.ogg" id="2_iaeb6"]
+[ext_resource type="AudioStream" uid="uid://btqu66guc4gxu" path="res://Assets/SFX/UI/click4.ogg" id="3_j5hgx"]
+[ext_resource type="AudioStream" uid="uid://df0q6xkb1x7lt" path="res://Assets/SFX/Dialogues/forceField_003.ogg" id="4_dialogue_popup"]
 
 [node name="AudioManager" type="Node" unique_id=485065856]
 script = ExtResource("1_oac8u")
+ui_hover_sound = ExtResource("2_iaeb6")
+ui_click_sound = ExtResource("3_j5hgx")
+dialogue_popup_sound = ExtResource("4_dialogue_popup")
 
 [node name="MusicPlayer" type="AudioStreamPlayer" parent="." unique_id=2107130569]
 stream = ExtResource("2_i4dsl")
 volume_db = -6.0
 autoplay = true
 bus = &"Music"
+
+[node name="UIClickPlayer" type="AudioStreamPlayer" parent="." unique_id=1818277705]
+bus = &"UI"
+
+[node name="UIHoverPlayer" type="AudioStreamPlayer" parent="." unique_id=1850745804]
+volume_db = -15.0
+bus = &"UI"
+
+[node name="DialoguePopupPlayer" type="AudioStreamPlayer" parent="." unique_id=192837465]
+process_mode = 3
+stream = ExtResource("4_dialogue_popup")
+volume_db = -5.0
+max_polyphony = 2
+bus = &"UI"
