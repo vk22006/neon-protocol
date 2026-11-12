@@ -4,6 +4,7 @@
 [ext_resource type="PackedScene" uid="uid://d3wjnbgwnljrk" path="res://Scenes/Projectile.tscn" id="2_dewec"]
 [ext_resource type="Texture2D" uid="uid://cr57o8siqjhaw" path="res://Assets/characters/crew-teal.png" id="2_kyqiw"]
 [ext_resource type="Texture2D" uid="uid://dq1xlxlvyc3r5" path="res://Assets/fx/muzzle-flash-3f.png" id="3_gntrk"]
+[ext_resource type="AudioStream" uid="uid://c68kbvl3g7eib" path="res://Assets/SFX/Players/impactPlank_medium_000.ogg" id="5_5ixxa"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_gntrk"]
 atlas = ExtResource("2_kyqiw")
@@ -269,6 +270,7 @@ collision_layer = 2
 collision_mask = 5
 script = ExtResource("1_kyqiw")
 ProjectileScene = ExtResource("2_dewec")
+ShootSound = ExtResource("5_5ixxa")
 
 [node name="Visuals" type="Node2D" parent="." unique_id=252795384]
 
@@ -297,3 +299,8 @@ shape = SubResource("CapsuleShape2D_qbkls")
 
 [node name="Camera2D" type="Camera2D" parent="." unique_id=1122963074]
 zoom = Vector2(1.5, 1.5)
+
+[node name="ShootingAudioPlayer" type="AudioStreamPlayer2D" parent="." unique_id=467074264]
+stream = ExtResource("5_5ixxa")
+bus = &"SFX"
+max_polyphony = 4
