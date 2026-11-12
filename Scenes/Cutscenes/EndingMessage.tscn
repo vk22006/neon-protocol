@@ -59,3 +59,11 @@ theme_override_colors/font_shadow_color = Color(0, 0, 0, 0.9)
 theme_override_font_sizes/font_size = 30
 text = "THE END"
 horizontal_alignment = 1
+
+[node name="Author" type="Label" parent="CenterContainer/VBoxContainer" unique_id=1968682912]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.7, 0.85, 0.95, 1)
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 0.9)
+theme_override_font_sizes/font_size = 12
+text = "Crafted by, Kishore"
+horizontal_alignment = 1
