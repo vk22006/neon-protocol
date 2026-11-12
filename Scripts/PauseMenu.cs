@@ -30,6 +30,7 @@ public partial class PauseMenu : CanvasLayer {
 	private Button _settingsButton;
 	private Button _backToMenuButton;
 	private Button _exitGameButton;
+	private Control _settingsPanelInstance;
 	private bool _isPaused = false;
 	private bool _isTransitioningToMenu = false;
 
@@ -51,6 +52,14 @@ public partial class PauseMenu : CanvasLayer {
 
 	public override void _Ready() {
 		ResolveReferences();
+		
+		Node audioManager = GetNodeOrNull<Node>("/root/AudioManager");
+
+		if (audioManager != null) {
+			audioManager.Call("register_ui_buttons", this);
+		} else {
+			GD.PushWarning("PauseMenu could not find AudioManager autoload!");
+		}
 
 		if (_root != null) {
 			_root.Visible = false;
@@ -94,6 +103,10 @@ public partial class PauseMenu : CanvasLayer {
 
 	public override void _UnhandledInput(InputEvent @event) {
 		if (_isTransitioningToMenu) {
+			return;
+		}
+
+		if (_settingsPanelInstance != null && GodotObject.IsInstanceValid(_settingsPanelInstance)) {
 			return;
 		}
 
@@ -144,6 +157,11 @@ public partial class PauseMenu : CanvasLayer {
 			return;
 		}
 
+		if (_settingsPanelInstance != null && GodotObject.IsInstanceValid(_settingsPanelInstance)) {
+			_settingsPanelInstance.QueueFree();
+			_settingsPanelInstance = null;
+		}
+
 		_isPaused = false;
 		if (_root != null) {
 			_root.Visible = false;
@@ -168,8 +186,44 @@ public partial class PauseMenu : CanvasLayer {
 	}
 
 	private void OnSettingsButtonPressed() {
-		GD.Print("[PauseMenu] Settings button selected. Integration point for upcoming Settings implementation.");
-		// Integration point: instantiate or open SettingsDialog when implemented
+		if (_settingsPanelInstance != null && GodotObject.IsInstanceValid(_settingsPanelInstance)) {
+			return;
+		}
+
+		GD.Print("[PauseMenu] Opening settings panel from pause menu.");
+		var settingsScene = GD.Load<PackedScene>("res://Scenes/UI/SettingsPanel.tscn");
+		if (settingsScene == null) {
+			GD.PushError("[PauseMenu] Failed to load SettingsPanel.tscn");
+			return;
+		}
+
+		_settingsPanelInstance = settingsScene.Instantiate<Control>();
+		if (_settingsPanelInstance == null) {
+			GD.PushError("[PauseMenu] Failed to instantiate SettingsPanel.");
+			return;
+		}
+
+		// Hide pause menu buttons so they are not interactive while settings is open
+		if (_root != null) {
+			_root.Visible = false;
+		}
+
+		AddChild(_settingsPanelInstance);
+
+		var audioManager = GetNodeOrNull<Node>("/root/AudioManager");
+		if (audioManager != null && audioManager.HasMethod("register_ui_buttons")) {
+			audioManager.Call("register_ui_buttons", _settingsPanelInstance);
+		}
+
+		_settingsPanelInstance.Connect("closed", Callable.From(() => {
+			if (_root != null) {
+				_root.Visible = true;
+			}
+			if (_settingsButton != null && _settingsButton.IsInsideTree()) {
+				_settingsButton.CallDeferred(Control.MethodName.GrabFocus);
+			}
+			_settingsPanelInstance = null;
+		}));
 	}
 
 	private void OnBackToMenuButtonPressed() {
