@@ -15,12 +15,13 @@ var _confirm_dialog: ConfirmationDialog = null
 
 
 func _ready() -> void:
+	AudioManager.play_music(
+		preload("res://Assets/music/mainMenu_Exploration/mondmatt-lost-in-space-130521.mp3"),
+		2.0
+	)
+	AudioManager.register_ui_buttons(self)
 	_setup_confirmation_dialog()
 	_update_resume_button_state()
-	#AudioManager.play_music(
-		#preload("res://Assets/music/mainMenu_Exploration/briefing-ambience.wav"),
-		#2.0
-	#)
 
 
 func _setup_confirmation_dialog() -> void:
@@ -132,7 +133,25 @@ func _resume_game(save_data: Dictionary) -> void:
 
 
 func _on_settings_btn_pressed() -> void:
-	pass # Replace with function body.
+	if _is_transitioning:
+		return
+	
+	var settings_scene := preload("res://Scenes/UI/SettingsPanel.tscn")
+	var settings_instance := settings_scene.instantiate() as Control
+	if settings_instance == null:
+		push_error("[MainMenu] Failed to instantiate SettingsPanel.")
+		return
+	
+	add_child(settings_instance)
+	
+	var audio_mgr := get_node_or_null("/root/AudioManager")
+	if audio_mgr != null and audio_mgr.has_method("register_ui_buttons"):
+		audio_mgr.register_ui_buttons(settings_instance)
+	
+	settings_instance.closed.connect(func():
+		if settings_btn != null and is_instance_valid(settings_btn):
+			settings_btn.grab_focus()
+	)
 
 
 func _on_exit_btn_pressed() -> void:
