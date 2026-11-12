@@ -36,6 +36,13 @@ public partial class EnemyController : CharacterBody2D {
 	[Export]
 	public float AttackWindup { get; set; } = 0.3f;
 
+	[ExportGroup("Audio")]
+	[Export]
+	public AudioStream ShootSound { get; set; }
+
+	[Export]
+	public AudioStream DeathSound { get; set; }
+
 	[ExportGroup("Health")]
 	[Export]
 	public virtual int MaxHealth { get; set; } = 30;
@@ -62,6 +69,7 @@ public partial class EnemyController : CharacterBody2D {
 	private float _attackCooldownTimer = 0.0f;
 	private bool _hasDroppedReward = false;
 	private bool _aiEnabled = false;
+	private AudioStreamPlayer2D _shootAudioPlayer;
 
 	public virtual EnemyState CurrentState => _currentState;
 	public virtual int CurrentHealth => _currentHealth;
@@ -93,6 +101,21 @@ public partial class EnemyController : CharacterBody2D {
 		if (_healthBarAnchor != null) {
 			_healthBarAnchor.Visible = true;
 		}
+
+		_shootAudioPlayer = GetNodeOrNull<AudioStreamPlayer2D>("ShootAudioPlayer");
+		if (_shootAudioPlayer == null) {
+			_shootAudioPlayer = new AudioStreamPlayer2D {
+				Name = "ShootAudioPlayer",
+				Bus = "SFX",
+				MaxPolyphony = 2
+			};
+			AddChild(_shootAudioPlayer);
+		}
+
+		if (_shootAudioPlayer.Stream == null) {
+			_shootAudioPlayer.Stream = ShootSound ?? GD.Load<AudioStream>("res://Assets/SFX/Enemies/laserSmall_002.ogg");
+		}
+		_shootAudioPlayer.Bus = "SFX";
 
 		EmitSignal(SignalName.HealthChanged, _currentHealth, MaxHealth);
 
@@ -184,6 +207,7 @@ public partial class EnemyController : CharacterBody2D {
 
 			if (!_attackDamageApplied && _attackTimer >= AttackWindup) {
 				ApplyAttackDamage();
+				PlayShootAudio();
 			}
 			return;
 		}
@@ -277,11 +301,31 @@ public partial class EnemyController : CharacterBody2D {
 			_collisionShape.SetDeferred(CollisionShape2D.PropertyName.Disabled, true);
 		}
 
+		PlayDeathAudio();
+
 		if (_sprite != null && _sprite.SpriteFrames != null && _sprite.SpriteFrames.HasAnimation("enemy_death")) {
 			_sprite.Play("enemy_death");
 		} else {
 			SpawnDeathReward();
 			QueueFree();
+		}
+	}
+
+	protected virtual void PlayShootAudio() {
+		if (!_aiEnabled || _currentState == EnemyState.Dead || _currentHealth <= 0) {
+			return;
+		}
+
+		if (_shootAudioPlayer != null && _shootAudioPlayer.Stream != null) {
+			_shootAudioPlayer.Play();
+		}
+	}
+
+	protected virtual void PlayDeathAudio() {
+		AudioStream deathStream = DeathSound ?? GD.Load<AudioStream>("res://Assets/SFX/Enemies/explosionCrunch_001.ogg");
+		Node audioManager = GetNodeOrNull<Node>("/root/AudioManager");
+		if (audioManager != null && deathStream != null) {
+			audioManager.Call("play_sfx_2d", deathStream, GlobalPosition, 0.0f);
 		}
 	}
 
