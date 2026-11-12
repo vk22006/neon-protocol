@@ -6162,6 +6162,7 @@ texture_filter = 1
 position = Vector2(299, 150)
 sprite_frames = SubResource("SpriteFrames_oxund")
 animation = &"walk_right"
+autoplay = "walk_right"
 
 [node name="GovernmentOfficial" type="AnimatedSprite2D" parent="Node2D" unique_id=1372627344]
 texture_filter = 1
