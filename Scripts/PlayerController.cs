@@ -45,6 +45,10 @@ public partial class PlayerController : CharacterBody2D {
 	[Signal]
 	public delegate void CrystalCountChangedEventHandler(int count);
 
+	[ExportGroup("Audio")]
+	[Export]
+	public AudioStream ShootSound { get; set; }
+
 	[ExportGroup("Player Health")]
 	[Export]
 	public int MaxHealth { get; set; } = 100;
@@ -52,6 +56,7 @@ public partial class PlayerController : CharacterBody2D {
 	private int _currentHealth;
 	private bool _isDead = false;
 	private int _crystalCount = 0;
+	private AudioStreamPlayer2D _shootingAudio;
 
 	public int CurrentHealth => _currentHealth;
 	public bool IsDead => _isDead;
@@ -97,6 +102,25 @@ public partial class PlayerController : CharacterBody2D {
 		_sprite = GetNode<AnimatedSprite2D>("Visuals/AnimatedSprite2D");
 		_weaponPivot = GetNode<Node2D>("WeaponPivot");
 		_muzzleFlash = GetNode<AnimatedSprite2D>("WeaponPivot/MuzzleFlash");
+		_shootingAudio = GetNodeOrNull<AudioStreamPlayer2D>("ShootingAudioPlayer");
+		if (_shootingAudio == null) {
+			Node legacyPlayer = GetNodeOrNull<Node>("ShootingAudioPlayer");
+			if (legacyPlayer != null && !(legacyPlayer is AudioStreamPlayer2D)) {
+				legacyPlayer.QueueFree();
+			}
+			_shootingAudio = new AudioStreamPlayer2D {
+				Name = "ShootingAudioPlayer",
+				Bus = "SFX",
+				MaxPolyphony = 4
+			};
+			AddChild(_shootingAudio);
+		}
+
+		if (_shootingAudio.Stream == null) {
+			_shootingAudio.Stream = ShootSound ?? GD.Load<AudioStream>("res://Assets/SFX/Players/impactPlank_medium_000.ogg");
+		}
+		_shootingAudio.Bus = "SFX";
+		
 		_currentHealth = MaxHealth;
 		_crystalCount = LevelController.PreservedCrystalCount;
 		EmitSignal(SignalName.HealthChanged, _currentHealth, MaxHealth);
@@ -104,9 +128,15 @@ public partial class PlayerController : CharacterBody2D {
 
 		if (_muzzleFlash != null) {
 			_muzzleFlash.Visible = false;
-			if (_muzzleFlash.SpriteFrames != null && _muzzleFlash.SpriteFrames.HasAnimation("player_fire")) {
-				_muzzleFlash.SpriteFrames.SetAnimationLoopMode("player_fire", SpriteFrames.LoopMode.None);
+
+			if (_muzzleFlash.SpriteFrames != null &&
+				_muzzleFlash.SpriteFrames.HasAnimation("player_fire")) {
+				_muzzleFlash.SpriteFrames.SetAnimationLoopMode(
+					"player_fire",
+					SpriteFrames.LoopMode.None
+				);
 			}
+
 			_muzzleFlash.AnimationFinished += OnMuzzleFlashFinished;
 		}
 
@@ -263,11 +293,18 @@ public partial class PlayerController : CharacterBody2D {
 		projectile.GlobalPosition = _muzzleFlash.GlobalPosition;
 
 		Vector2 aimDirection = GetGlobalMousePosition() - projectile.GlobalPosition;
+
 		if (aimDirection.LengthSquared() < 0.001f) {
 			aimDirection = Vector2.Right.Rotated(_weaponPivot.Rotation);
 		}
 
 		projectile.Initialize(aimDirection);
+
+		if (_shootingAudio != null && _shootingAudio.Stream != null) {
+			_shootingAudio.Play();
+		} else {
+			GD.PushWarning("Player shooting audio or its Stream is missing!");
+		}
 
 		if (_muzzleFlash != null) {
 			_muzzleFlash.Visible = true;
