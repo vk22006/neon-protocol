@@ -1,0 +1,180 @@
+[gd_scene format=3 uid="uid://df7x8h2m6lk3p"]
+
+[ext_resource type="Script" uid="uid://cxkvm4r612p3a" path="res://Scripts/SettingsPanel.gd" id="1_settings_panel"]
+[ext_resource type="Theme" uid="uid://b4po10m7x2tj6" path="res://addons/pixel_ui_scifi/themes/cyan.tres" id="2_cyan_theme"]
+
+[node name="SettingsPanel" type="Control" unique_id=551122331]
+process_mode = 3
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource("2_cyan_theme")
+script = ExtResource("1_settings_panel")
+
+[node name="DimOverlay" type="ColorRect" parent="." unique_id=551122332]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+color = Color(0, 0, 0, 0.7)
+
+[node name="CenterContainer" type="CenterContainer" parent="." unique_id=551122333]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="PanelBox" type="Panel" parent="CenterContainer" unique_id=551122334]
+custom_minimum_size = Vector2(330, 250)
+layout_mode = 2
+
+[node name="MarginContainer" type="MarginContainer" parent="CenterContainer/PanelBox" unique_id=551122335]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 14
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 14
+theme_override_constants/margin_bottom = 10
+
+[node name="ContentVBox" type="VBoxContainer" parent="CenterContainer/PanelBox/MarginContainer" unique_id=551122336]
+layout_mode = 2
+theme_override_constants/separation = 5
+alignment = 1
+
+[node name="TitleLabel" type="Label" parent="CenterContainer/PanelBox/MarginContainer/ContentVBox" unique_id=551122337]
+layout_mode = 2
+theme_override_font_sizes/font_size = 18
+text = "SETTINGS"
+horizontal_alignment = 1
+
+[node name="HSeparator1" type="HSeparator" parent="CenterContainer/PanelBox/MarginContainer/ContentVBox" unique_id=551122338]
+layout_mode = 2
+
+[node name="AudioHeader" type="Label" parent="CenterContainer/PanelBox/MarginContainer/ContentVBox" unique_id=551122339]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.251, 0.816, 0.925, 1)
+theme_override_font_sizes/font_size = 12
+text = "AUDIO"
+
+[node name="MusicRow" type="HBoxContainer" parent="CenterContainer/PanelBox/MarginContainer/ContentVBox" unique_id=551122340]
+layout_mode = 2
+theme_override_constants/separation = 6
+
+[node name="MusicLabel" type="Label" parent="CenterContainer/PanelBox/MarginContainer/ContentVBox/MusicRow" unique_id=551122341]
+custom_minimum_size = Vector2(45, 0)
+layout_mode = 2
+text = "Music"
+
+[node name="MusicToggle" type="CheckBox" parent="CenterContainer/PanelBox/MarginContainer/ContentVBox/MusicRow" unique_id=551122342]
+unique_name_in_owner = true
+layout_mode = 2
+button_pressed = true
+text = "ON"
+
+[node name="MusicSlider" type="HSlider" parent="CenterContainer/PanelBox/MarginContainer/ContentVBox/MusicRow" unique_id=551122343]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 4
+step = 1.0
+value = 100.0
+
+[node name="MusicPercentLabel" type="Label" parent="CenterContainer/PanelBox/MarginContainer/ContentVBox/MusicRow" unique_id=551122344]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(36, 0)
+layout_mode = 2
+text = "100%"
+horizontal_alignment = 2
+
+[node name="AudioRow" type="HBoxContainer" parent="CenterContainer/PanelBox/MarginContainer/ContentVBox" unique_id=551122345]
+layout_mode = 2
+theme_override_constants/separation = 6
+
+[node name="AudioLabel" type="Label" parent="CenterContainer/PanelBox/MarginContainer/ContentVBox/AudioRow" unique_id=551122346]
+custom_minimum_size = Vector2(45, 0)
+layout_mode = 2
+text = "Audio"
+
+[node name="AudioToggle" type="CheckBox" parent="CenterContainer/PanelBox/MarginContainer/ContentVBox/AudioRow" unique_id=551122347]
+unique_name_in_owner = true
+layout_mode = 2
+button_pressed = true
+text = "ON"
+
+[node name="AudioSlider" type="HSlider" parent="CenterContainer/PanelBox/MarginContainer/ContentVBox/AudioRow" unique_id=551122348]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 4
+step = 1.0
+value = 100.0
+
+[node name="AudioPercentLabel" type="Label" parent="CenterContainer/PanelBox/MarginContainer/ContentVBox/AudioRow" unique_id=551122349]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(36, 0)
+layout_mode = 2
+text = "100%"
+horizontal_alignment = 2
+
+[node name="HSeparator2" type="HSeparator" parent="CenterContainer/PanelBox/MarginContainer/ContentVBox" unique_id=551122350]
+layout_mode = 2
+
+[node name="DisplayHeader" type="Label" parent="CenterContainer/PanelBox/MarginContainer/ContentVBox" unique_id=551122351]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.251, 0.816, 0.925, 1)
+theme_override_font_sizes/font_size = 12
+text = "DISPLAY"
+
+[node name="DisplayModeRow" type="HBoxContainer" parent="CenterContainer/PanelBox/MarginContainer/ContentVBox" unique_id=551122352]
+layout_mode = 2
+theme_override_constants/separation = 6
+
+[node name="DisplayModeLabel" type="Label" parent="CenterContainer/PanelBox/MarginContainer/ContentVBox/DisplayModeRow" unique_id=551122353]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Display Mode"
+
+[node name="WindowModeOption" type="OptionButton" parent="CenterContainer/PanelBox/MarginContainer/ContentVBox/DisplayModeRow" unique_id=551122354]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(100, 20)
+layout_mode = 2
+
+[node name="VSyncRow" type="HBoxContainer" parent="CenterContainer/PanelBox/MarginContainer/ContentVBox" unique_id=551122355]
+layout_mode = 2
+theme_override_constants/separation = 6
+
+[node name="VSyncLabel" type="Label" parent="CenterContainer/PanelBox/MarginContainer/ContentVBox/VSyncRow" unique_id=551122356]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "VSync"
+
+[node name="VSyncToggle" type="CheckBox" parent="CenterContainer/PanelBox/MarginContainer/ContentVBox/VSyncRow" unique_id=551122357]
+unique_name_in_owner = true
+layout_mode = 2
+button_pressed = true
+text = "ON"
+
+[node name="HSeparator3" type="HSeparator" parent="CenterContainer/PanelBox/MarginContainer/ContentVBox" unique_id=551122358]
+layout_mode = 2
+
+[node name="ButtonCenter" type="CenterContainer" parent="CenterContainer/PanelBox/MarginContainer/ContentVBox" unique_id=551122359]
+layout_mode = 2
+
+[node name="BackButton" type="Button" parent="CenterContainer/PanelBox/MarginContainer/ContentVBox/ButtonCenter" unique_id=551122360]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(100, 24)
+layout_mode = 2
+text = "BACK"
