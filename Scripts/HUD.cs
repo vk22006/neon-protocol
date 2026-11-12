@@ -41,6 +41,13 @@ public partial class HUD : Control {
 
 		_pauseButton = GetNodeOrNull<BaseButton>(PauseButtonPath)
 			?? GetNodeOrNull<BaseButton>("PauseButton");
+		Node audioManager = GetNodeOrNull<Node>("/root/AudioManager");
+
+		if (audioManager != null) {
+			audioManager.Call("register_ui_buttons", this);
+		} else {
+			GD.PushWarning("HUD could not find AudioManager autoload!");
+		}
 
 		if (_gameOverContainer != null) {
 			_gameOverContainer.Visible = false;
