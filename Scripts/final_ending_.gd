@@ -5,6 +5,7 @@ extends Control
 @onready var quote: Label = $CenterContainer/VBoxContainer/Quote
 @onready var quote_person: Label = $CenterContainer/VBoxContainer/QuotePerson
 @onready var ending: Label = $CenterContainer/VBoxContainer/Ending
+@onready var author: Label = $CenterContainer/VBoxContainer/Author
 @onready var scene_transition = get_node_or_null("/root/SceneTransition")
 
 var typing_tween: Tween
@@ -12,24 +13,35 @@ var _is_finishing: bool = false
 
 
 func _ready() -> void:
+	AudioManager.play_music(
+		preload("res://Assets/music/ending/syouki_takahashi-epilogue-228154.mp3"),
+		1.0
+	)
 	quote.visible_characters = 0
 	quote_person.visible_characters = 0
 	ending.visible_characters = 0
+	author.visible_characters = 0
+	
+	ending.visible = false
+	author.visible = false
 	
 	await start_typing(quote)
-	await get_tree().create_timer(4.0).timeout
+	await get_tree().create_timer(7.0).timeout
+	typing_speed = 5.0
 	await start_typing(quote_person)
 	
-	await get_tree().create_timer(3.0).timeout
+	await get_tree().create_timer(6.0).timeout
 	
 	quote.visible = false
 	quote_person.visible = false
-	
-	typing_speed = 5.0
+	ending.visible = true
+	author.visible = true
 	
 	await start_typing(ending)
+	await get_tree().create_timer(3.0).timeout
+	await start_typing(author)
 	await get_tree().create_timer(5.0).timeout
-	
+
 	if not _is_finishing:
 		_is_finishing = true
 		await _finish_campaign_and_return_to_main_menu()
