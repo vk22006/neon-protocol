@@ -23,6 +23,7 @@ buses/default_bus_layout="uid://d1x07gct48dbp"
 
 SceneTransition="*res://Scenes/Cutscenes/SceneTransition.tscn"
 AudioManager="*uid://dbqw64lbh2uwp"
+SettingsManager="*res://Scripts/SettingsManager.gd"
 
 [display]
 
@@ -84,4 +85,5 @@ pause={
 [rendering]
 
 rendering_device/driver.windows="d3d12"
+textures/vram_compression/import_s3tc_bptc=true
 environment/defaults/default_clear_color=Color(0, 0, 0, 1)
