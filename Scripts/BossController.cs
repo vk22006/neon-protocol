@@ -15,6 +15,13 @@ public partial class BossController : EnemyController {
 	[Signal]
 	public delegate void LaserAttackEndedEventHandler();
 
+	[ExportGroup("Boss Audio")]
+	[Export]
+	public AudioStream LaserShootSound { get; set; }
+
+	[Export]
+	public AudioStream BossDeathSound { get; set; }
+
 	[ExportGroup("Boss Combat Settings")]
 	[Export]
 	public PackedScene LaserScene { get; set; }
@@ -71,6 +78,7 @@ public partial class BossController : EnemyController {
 	private float _shootingTimer = 0.0f;
 	private BossLaser _currentLaser = null;
 	private bool _hasDroppedBossReward = false;
+	private AudioStreamPlayer2D _laserAudioPlayer;
 
 	public BossCombatState CombatState => _bossCombatState;
 	public bool IsFacingLeft => _isFacingLeft;
@@ -109,6 +117,21 @@ public partial class BossController : EnemyController {
 		if (_bossHealthBarAnchor != null) {
 			_bossHealthBarAnchor.Visible = true;
 		}
+
+		_laserAudioPlayer = GetNodeOrNull<AudioStreamPlayer2D>("LaserAudioPlayer");
+		if (_laserAudioPlayer == null) {
+			_laserAudioPlayer = new AudioStreamPlayer2D {
+				Name = "LaserAudioPlayer",
+				Bus = "SFX",
+				MaxPolyphony = 2
+			};
+			AddChild(_laserAudioPlayer);
+		}
+
+		if (_laserAudioPlayer.Stream == null) {
+			_laserAudioPlayer.Stream = LaserShootSound ?? GD.Load<AudioStream>("res://Assets/SFX/Enemies/laserLarge_002.ogg");
+		}
+		_laserAudioPlayer.Bus = "SFX";
 
 		EmitSignal(SignalName.HealthChanged, _bossHealth, MaxHealth);
 
@@ -229,6 +252,7 @@ public partial class BossController : EnemyController {
 		}
 
 		SpawnLaserBeam();
+		PlayLaserAudio();
 		EmitSignal(SignalName.LaserAttackStarted);
 	}
 
@@ -438,11 +462,28 @@ public partial class BossController : EnemyController {
 			_bossHealthBar.Visible = false;
 		}
 
-		// 5. Emit death signals
+		// 5. Play boss death audio
+		PlayBossDeathAudio();
+
+		// 6. Emit death signals
 		EmitSignal(SignalName.EnemyDied);
 
-		// 6. Play death animation
+		// 7. Play death animation
 		PlayAnimation("boss_death");
+	}
+
+	private void PlayLaserAudio() {
+		if (_laserAudioPlayer != null && _laserAudioPlayer.Stream != null) {
+			_laserAudioPlayer.Play();
+		}
+	}
+
+	private void PlayBossDeathAudio() {
+		AudioStream deathStream = BossDeathSound ?? GD.Load<AudioStream>("res://Assets/SFX/Enemies/explosionCrunch_boss.ogg");
+		Node audioManager = GetNodeOrNull<Node>("/root/AudioManager");
+		if (audioManager != null && deathStream != null) {
+			audioManager.Call("play_sfx_2d", deathStream, GlobalPosition, 0.0f);
+		}
 	}
 
 	private void OnBossAnimationFinished() {
