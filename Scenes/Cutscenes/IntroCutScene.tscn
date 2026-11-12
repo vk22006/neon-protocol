@@ -5672,6 +5672,7 @@ autoplay = "idle_left"
 frame_progress = 0.53850377
 
 [node name="Player" type="AnimatedSprite2D" parent="Node2D" unique_id=954439039]
+texture_filter = 1
 position = Vector2(232, 287)
 sprite_frames = SubResource("SpriteFrames_oxund")
 animation = &"move_up"
