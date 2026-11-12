@@ -2,6 +2,7 @@
 
 [ext_resource type="Texture2D" uid="uid://36tm0eyd5voe" path="res://Assets/interior/doors/door-4f.png" id="1_38ogf"]
 [ext_resource type="Script" uid="uid://doorctl0102" path="res://Scripts/DoorController.cs" id="2_doorctl"]
+[ext_resource type="AudioStream" uid="uid://b7uh17w0me8qv" path="res://Assets/SFX/Environment/doorOpen_002.ogg" id="3_door_sfx"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_mw28t"]
 atlas = ExtResource("1_38ogf")
@@ -56,6 +57,7 @@ size = Vector2(16, 32)
 
 [node name="Door" type="Node2D" unique_id=1805617126 groups=["door"]]
 script = ExtResource("2_doorctl")
+OpenSound = ExtResource("3_door_sfx")
 
 [node name="DoorVisuals" type="AnimatedSprite2D" parent="." unique_id=2065272919]
 texture_filter = 1
@@ -75,3 +77,7 @@ collision_mask = 2
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="ExitArea" unique_id=741029385]
 shape = SubResource("RectangleShape2D_door")
+
+[node name="DoorAudioPlayer" type="AudioStreamPlayer2D" parent="." unique_id=982341014]
+stream = ExtResource("3_door_sfx")
+bus = &"SFX"
