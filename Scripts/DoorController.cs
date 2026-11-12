@@ -7,6 +7,10 @@ public partial class DoorController : Node2D {
 	[Signal]
 	public delegate void PlayerEnteredDoorEventHandler(PlayerController player);
 
+	[ExportGroup("Door Audio")]
+	[Export]
+	public AudioStream OpenSound { get; set; }
+
 	[Export]
 	public NodePath DoorVisualsPath { get; set; } = "DoorVisuals";
 
@@ -19,6 +23,7 @@ public partial class DoorController : Node2D {
 	private AnimatedSprite2D _doorVisuals;
 	private CollisionShape2D _collisionShape;
 	private Area2D _exitArea;
+	private AudioStreamPlayer2D _doorAudioPlayer;
 	private bool _isOpen = false;
 	private bool _isFullyOpen = false;
 	private bool _hasTriggeredExit = false;
@@ -34,6 +39,20 @@ public partial class DoorController : Node2D {
 
 		_doorVisuals = GetNodeOrNull<AnimatedSprite2D>(DoorVisualsPath);
 		_collisionShape = GetNodeOrNull<CollisionShape2D>(CollisionShapePath);
+
+		_doorAudioPlayer = GetNodeOrNull<AudioStreamPlayer2D>("DoorAudioPlayer");
+		if (_doorAudioPlayer == null) {
+			_doorAudioPlayer = new AudioStreamPlayer2D {
+				Name = "DoorAudioPlayer",
+				Bus = "SFX"
+			};
+			AddChild(_doorAudioPlayer);
+		}
+
+		if (_doorAudioPlayer.Stream == null) {
+			_doorAudioPlayer.Stream = OpenSound ?? GD.Load<AudioStream>("res://Assets/SFX/Environment/doorOpen_002.ogg");
+		}
+		_doorAudioPlayer.Bus = "SFX";
 
 		// Always ensure the door starts strictly in its closed state
 		_isOpen = false;
@@ -124,6 +143,10 @@ public partial class DoorController : Node2D {
 
 		_isOpen = true;
 		_isFullyOpen = false;
+
+		if (_doorAudioPlayer != null && _doorAudioPlayer.Stream != null) {
+			_doorAudioPlayer.Play();
+		}
 
 		// Exit area monitoring remains inactive while the door opening animation plays
 		if (_exitArea != null) {
