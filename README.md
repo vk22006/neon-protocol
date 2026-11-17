@@ -1,5 +1,7 @@
 # Neon Protocol
 
+English | [தமிழ்](docs/README_TA.md) | [简体中文](docs/README_ZH.md) | [हिंदी](docs/README_HI.md) | [Bahasa Indonesia](docs/README_ID.md) | [Русский](docs/README_RU.md)
+
 A 2D top-down sci-fi survival shooter built with Godot 4.7.1 Mono (C# & GDScript).
 
 ![Main Menu](docs/img/main_menu.png)
