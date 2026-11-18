@@ -2,6 +2,9 @@
 .godot/
 /android/
 
+# Large Asset files
+Assets/music/
+Assets/SFX/
 # Assets directory
 Assets/
 
